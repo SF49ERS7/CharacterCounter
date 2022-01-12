@@ -39,7 +39,7 @@ public class GUI
     {
         int result = JOptionPane.showConfirmDialog(null, "Do you wish to send the previous output to a file?", "Output Question", JOptionPane.YES_NO_OPTION);
         if (result == 0)
-            Backend.sendToTextFile(output);
+            Backend.sendToTextFile(output, true);
     }
     /**
      * Sent when a user fails to provide input.

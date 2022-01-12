@@ -24,14 +24,17 @@ public class Backend
      * Sends the <code>output</code> parameter to a file on the disk.
      * @param output The data to be sent to the disk
      */
-    public static void sendToTextFile(String output)
+    public static void sendToTextFile(String output, boolean isGui)
     {
         try {
             FileWriter outputFile = new FileWriter("output.txt");
             outputFile.write(output);
             outputFile.close();
         } catch (IOException e) {
-            GUI.displayFileError();
+            if (isGui)
+                GUI.displayFileError();
+            else
+                CLI.displayFileError();
         }
     }
 

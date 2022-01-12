@@ -22,6 +22,13 @@ public class CLI
     {
         System.out.println("Error: You gave no input. Please give an input and try again");
     }
+    /**
+     * Displays when the file output request fails due to a write-protected disk. Rarely, if ever, used.
+     */
+    public static void displayFileError()
+    {
+        System.out.println("Error: Your disk is write-protected, so I cannot send the output to a file");
+    }
 
     /**
      * Outputs a message by taking the <code>numsOfChars</code> parameter, and passing it to the <code>outputMessage()</code> method.
@@ -46,7 +53,7 @@ public class CLI
             System.out.println("That's not a valid input, so I take that as a no");
         }
         if (result)
-            Backend.sendToTextFile(output);
+            Backend.sendToTextFile(output, false);
     }
     /**
      * Runnable method for the CLI.
