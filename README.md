@@ -7,3 +7,4 @@ You can also run the program from the command line:
 ```
 java -jar CharacterCounter.jar -cmd
 ```
+For other command-line arguments, [click here](https://github.com/SF49ERS7/CharacterCounter/wiki/Command-line-Arguments).
