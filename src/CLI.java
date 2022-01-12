@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 /**
  * The class for the rarely-used command-line interface
@@ -30,10 +31,27 @@ public class CLI
     {
         System.out.println(Backend.outputMessage(numsOfChars));
     }
+
     /**
-     * Runnable method for the CLI
+     *  Prompts the user if they would like to send the contents of <code>displayOutput</code> to a file on the disk.
+     * @param output The data to be written to the disk.
      */
-    public static void main()
+    public static void promptForFileOutput(String output)
+    {
+        System.out.println("Do you wish to send the previous output to a file? Type 'true' if you do and 'false' if you don't");
+        boolean result = false;
+        try {
+            result = keyboard.nextBoolean();
+        } catch (InputMismatchException e) {
+            System.out.println("That's not a valid input, so I take that as a no");
+        }
+        if (result)
+            Backend.sendToTextFile(output);
+    }
+    /**
+     * Runnable method for the CLI.
+     */
+    public static void main(String[] args)
     {
         String input = displayInput();
         String data = Backend.parseData(input);
@@ -46,5 +64,8 @@ public class CLI
         int[] numsOfChars = Backend.charCounter(data);
 
         displayOutput(numsOfChars);
+
+        if (args.length == 1)
+            promptForFileOutput(Backend.outputMessage(numsOfChars));
     }
 }
