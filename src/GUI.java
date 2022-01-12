@@ -21,7 +21,7 @@ public class GUI
     }
     /**
      * Displays a dialog box by taking the <code>numsOfChars</code> parameter, and passing it to the <code>outputMessage()</code> method.
-     * @param numsOfChars An array with at least 29 rows that is ordered correctly
+     * @param numsOfChars An array with at least 29 rows that is ordered correctly.
      */
     public static void displayOutput(int[] numsOfChars)
     {
@@ -47,5 +47,28 @@ public class GUI
     public static void noInputError()
     {
         JOptionPane.showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    /**
+     * Runnable method for the CLI
+     * @param args The command-line arguments, used only for the file output prompt
+     */
+    public static void main(String[] args)
+    {
+        do {
+            String input = displayInput();
+            String data = Backend.parseData(input);
+            if (input.equals(""))
+            {
+                noInputError();
+                continue;
+            }
+
+            int[] numsOfChars = Backend.charCounter(data);
+
+            displayOutput(numsOfChars);
+
+            if (args.length == 0)
+                promptForFileOutput(Backend.outputMessage(numsOfChars));
+        } while (true);
     }
 }
