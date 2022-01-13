@@ -1,4 +1,6 @@
 import javax.swing.JOptionPane;
+import java.awt.GraphicsEnvironment;
+
 /**
  *  Contains all the <code>JOptionPane</code> calls in this program, making it easy to modularize the program.
  */
@@ -42,18 +44,25 @@ public class GUI
             Backend.sendToTextFile(output, true);
     }
     /**
-     * Sent when a user fails to provide input.
+     * Sent when the user fails to provide input.
      */
     public static void noInputError()
     {
         JOptionPane.showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
-     * Runnable method for the CLI
+     * Runnable method for the GUI.
      * @param args The command-line arguments, used only for the file output prompt.
      */
     public static void main(String[] args)
     {
+        if (GraphicsEnvironment.isHeadless())
+        {
+            args = new String[1];
+            CLI.main(args);
+            return;
+        }
+
         do {
             String input = displayInput();
             String data = Backend.parseData(input);
