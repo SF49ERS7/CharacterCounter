@@ -6,8 +6,8 @@ import java.io.IOException;
 public class Backend
 {
     /** Takes the <code>input</code> parameter and determines if it is the quit command. It also sets it to lowercase, allowing it to be parsed properly.
-     * @param input The <code>String</code> to be parsed
-     * @return The parsed string, set to lowercase
+     * @param input The <code>String</code> to be parsed.
+     * @return The parsed string, set to lowercase.
      */
     public static String parseData(String input)
     {
@@ -22,7 +22,8 @@ public class Backend
 
     /**
      * Sends the <code>output</code> parameter to a file on the disk.
-     * @param output The data to be sent to the disk
+     * @param output The data to be sent to the disk.
+     * @param isGui A flag that determines whether or not this method was called by a GUI.
      */
     public static void sendToTextFile(String output, boolean isGui)
     {
@@ -40,8 +41,8 @@ public class Backend
 
     /**
      * This method takes the <code>data</code> parameter and calculates how many of each character there are in it.
-     * @param data The input generated at the beginning of the program
-     * @return The number of each characters found
+     * @param data The input generated at the beginning of the program.
+     * @return The number of each characters found.
      */
     public static int[] charCounter(String data)
     {
@@ -95,8 +96,8 @@ public class Backend
 
     /**
      * This method formats the <code>numsOfChars</code> parameter to fit each number of characters.
-     * @param numsOfChars The array that tells how many of each character there are
-     * @return A concatenated string with everything formatted
+     * @param numsOfChars The array that tells how many of each character there are.
+     * @return A concatenated string with everything formatted.
      */
     public static String outputMessage(int[] numsOfChars)
     {

@@ -1,10 +1,13 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 /**
- * The class for the rarely-used command-line interface
+ * The class for the rarely-used command-line interface.
  */
 public class CLI
 {
+    /**
+     * Defines the <code>Scanner</code> variable for this class.
+     */
     private static Scanner keyboard = new Scanner(System.in);
     /**
      * Asks the user for the input to count.
@@ -32,7 +35,7 @@ public class CLI
 
     /**
      * Outputs a message by taking the <code>numsOfChars</code> parameter, and passing it to the <code>outputMessage()</code> method.
-     * @param numsOfChars An array with at least 29 rows that is ordered correctly
+     * @param numsOfChars An array with at least 29 rows that is ordered correctly.
      */
     public static void displayOutput(int[] numsOfChars)
     {
@@ -57,6 +60,7 @@ public class CLI
     }
     /**
      * Runnable method for the CLI.
+     * @param args Command-line arguments passed from <code>Main.main()</code>.
      */
     public static void main(String[] args)
     {

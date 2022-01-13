@@ -6,7 +6,7 @@ public class GUI
 {
     /**
      * Displays a dialog box with a text prompt, asking for an input.
-     * @return The input provided by the user
+     * @return The input provided by the user.
      */
     public static String displayInput()
     {
@@ -50,7 +50,7 @@ public class GUI
     }
     /**
      * Runnable method for the CLI
-     * @param args The command-line arguments, used only for the file output prompt
+     * @param args The command-line arguments, used only for the file output prompt.
      */
     public static void main(String[] args)
     {
