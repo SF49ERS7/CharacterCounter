@@ -1,10 +1,25 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Handles the parsing of inputted data, as well as the aforementioned outputting to a text file.
  */
 public class Backend
 {
+    /**
+     * Stores the program's version number
+     */
+    private static final String programVersion = "0.3.0-alpha";
+    /**
+     * Getter for <code>programVersion</code>.
+     * @return The program's version.
+     */
+    public static String getProgramVersion()
+    {
+        return programVersion;
+    }
     /** Takes the <code>input</code> parameter and determines if it is the quit command. It also sets it to lowercase, allowing it to be parsed properly.
      * @param input The <code>String</code> to be parsed.
      * @return The parsed string, set to lowercase.
@@ -19,7 +34,6 @@ public class Backend
         }
         return input.toLowerCase();
     }
-
     /**
      * Sends the <code>output</code> parameter to a file on the disk.
      * @param output The data to be sent to the disk.
@@ -28,8 +42,11 @@ public class Backend
     public static void sendToTextFile(String output, boolean isGui)
     {
         try {
+            Date date = new Date(); // This object contains the current date value
+            SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy 'at' HH:mm:ss");
+
             FileWriter outputFile = new FileWriter("output.txt");
-            outputFile.write(output);
+            outputFile.write("#Character Counter File Output, by SF49ERS7\n#Version " + getProgramVersion() + "\n#Generated on " + formatter.format(date) + "\n\n" + output);
             outputFile.close();
         } catch (IOException e) {
             if (isGui)
@@ -38,7 +55,6 @@ public class Backend
                 CLI.displayFileError();
         }
     }
-
     /**
      * This method takes the <code>data</code> parameter and calculates how many of each character there are in it.
      * @param data The input generated at the beginning of the program.
@@ -93,43 +109,90 @@ public class Backend
             }
         return numsOfChars;
     }
-
     /**
      * This method formats the <code>numsOfChars</code> parameter to fit each number of characters.
      * @param numsOfChars The array that tells how many of each character there are.
-     * @return A concatenated string with everything formatted.
+     * @return A concatenated <code>String</code> with everything formatted.
      */
     public static String outputMessage(int[] numsOfChars)
     {
-        return "Number of characters:\n" +
-                "A: " + numsOfChars[0] + "\n" +
-                "B: " + numsOfChars[1] + "\n" +
-                "C: " + numsOfChars[2] + "\n" +
-                "D: " + numsOfChars[3] + "\n" +
-                "E: " + numsOfChars[4] + "\n" +
-                "F: " + numsOfChars[5] + "\n" +
-                "G: " + numsOfChars[6] + "\n" +
-                "H: " + numsOfChars[7] + "\n" +
-                "I: " + numsOfChars[8] + "\n" +
-                "J: " + numsOfChars[9] + "\n" +
-                "K: " + numsOfChars[10] + "\n" +
-                "L: " + numsOfChars[11] + "\n" +
-                "M: " + numsOfChars[12] + "\n" +
-                "N: " + numsOfChars[13] + "\n" +
-                "O: " + numsOfChars[14] + "\n" +
-                "P: " + numsOfChars[15] + "\n" +
-                "Q: " + numsOfChars[16] + "\n" +
-                "R: " + numsOfChars[17] + "\n" +
-                "S: " + numsOfChars[18] + "\n" +
-                "T: " + numsOfChars[19] + "\n" +
-                "U: " + numsOfChars[20] + "\n" +
-                "V: " + numsOfChars[21] + "\n" +
-                "W: " + numsOfChars[22] + "\n" +
-                "X: " + numsOfChars[23] + "\n" +
-                "Y: " + numsOfChars[24] + "\n" +
-                "Z: " + numsOfChars[25] + "\n" +
-                "Numbers: " + numsOfChars[26] + "\n" +
-                "Spaces: " + numsOfChars[27] + "\n" +
-                "Other Characters: " + numsOfChars[28];
+        if (Config.getEnabledSettings()[2])
+            return "Number of characters:\n" +
+                    "A: " + numsOfChars[0] + "\n" +
+                    "B: " + numsOfChars[1] + "\n" +
+                    "C: " + numsOfChars[2] + "\n" +
+                    "D: " + numsOfChars[3] + "\n" +
+                    "E: " + numsOfChars[4] + "\n" +
+                    "F: " + numsOfChars[5] + "\n" +
+                    "G: " + numsOfChars[6] + "\n" +
+                    "H: " + numsOfChars[7] + "\n" +
+                    "I: " + numsOfChars[8] + "\n" +
+                    "J: " + numsOfChars[9] + "\n" +
+                    "K: " + numsOfChars[10] + "\n" +
+                    "L: " + numsOfChars[11] + "\n" +
+                    "M: " + numsOfChars[12] + "\n" +
+                    "N: " + numsOfChars[13] + "\n" +
+                    "O: " + numsOfChars[14] + "\n" +
+                    "P: " + numsOfChars[15] + "\n" +
+                    "Q: " + numsOfChars[16] + "\n" +
+                    "R: " + numsOfChars[17] + "\n" +
+                    "S: " + numsOfChars[18] + "\n" +
+                    "T: " + numsOfChars[19] + "\n" +
+                    "U: " + numsOfChars[20] + "\n" +
+                    "V: " + numsOfChars[21] + "\n" +
+                    "W: " + numsOfChars[22] + "\n" +
+                    "X: " + numsOfChars[23] + "\n" +
+                    "Y: " + numsOfChars[24] + "\n" +
+                    "Z: " + numsOfChars[25] + "\n" +
+                    "Numbers: " + numsOfChars[26] + "\n" +
+                    "Spaces: " + numsOfChars[27] + "\n" +
+                    "Other Characters: " + numsOfChars[28];
+        else
+            return "Number of characters:\n" +
+                filterValues("A: ", numsOfChars[0], false) +
+                filterValues("B: ", numsOfChars[1], false) +
+                filterValues("C: ", numsOfChars[2], false) +
+                filterValues("D: ", numsOfChars[3], false) +
+                filterValues("E: ", numsOfChars[4], false) +
+                filterValues("F: ", numsOfChars[5], false) +
+                filterValues("G: ", numsOfChars[6], false) +
+                filterValues("H: ", numsOfChars[7], false) +
+                filterValues("I: ", numsOfChars[8], false) +
+                filterValues("J: ", numsOfChars[9], false) +
+                filterValues("K: ", numsOfChars[10], false) +
+                filterValues("L: ", numsOfChars[11], false) +
+                filterValues("M: ", numsOfChars[12], false) +
+                filterValues("N: ", numsOfChars[13], false) +
+                filterValues("O: ", numsOfChars[14], false) +
+                filterValues("P: ", numsOfChars[15], false) +
+                filterValues("Q: ", numsOfChars[16], false) +
+                filterValues("R: ", numsOfChars[17], false) +
+                filterValues("S: ", numsOfChars[18], false) +
+                filterValues("T: ", numsOfChars[19], false) +
+                filterValues("U: ", numsOfChars[20], false) +
+                filterValues("V: ", numsOfChars[21], false) +
+                filterValues("W: ", numsOfChars[22], false) +
+                filterValues("X: ", numsOfChars[23], false) +
+                filterValues("Y: ", numsOfChars[24], false) +
+                filterValues("Z: ", numsOfChars[25], false) +
+                filterValues("Numbers: ", numsOfChars[26], false) +
+                filterValues("Spaces: ", numsOfChars[27], false) +
+                filterValues("Other Characters: ", numsOfChars[28], true);
+    }
+    /**
+     * This method ensures that only non-zero values are displayed to the user.
+     * @param prefix What character is being counted.
+     * @param input The number of characters, pre-counted.
+     * @param isAtTheEnd Determines if the value should have a carriage return or not.
+     * @return The filtered value.
+     */
+    public static String filterValues(String prefix, int input, boolean isAtTheEnd)
+    {
+        if (input == 0 && !Config.getEnabledSettings()[2])
+            return "";
+        else if (!isAtTheEnd)
+            return prefix + input + "\n";
+        else
+            return prefix + input;
     }
 }
