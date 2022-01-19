@@ -1,6 +1,4 @@
 import javax.swing.JOptionPane;
-import java.awt.GraphicsEnvironment;
-
 /**
  *  Contains all the <code>JOptionPane</code> calls in this program, making it easy to modularize the program.
  */
@@ -12,7 +10,7 @@ public class GUI
      */
     public static String displayInput()
     {
-        return JOptionPane.showInputDialog(null, "Enter the input to count\nAlternatively, type ':quit' to exit", "Input", JOptionPane.QUESTION_MESSAGE);
+        return JOptionPane.showInputDialog(null, "Welcome to Character Counter version " + Backend.getProgramVersion() + "\nEnter the input to count", "Input", JOptionPane.QUESTION_MESSAGE);
     }
     /**
      * Displays when the file output request fails due to a write-protected disk. Rarely, if ever, used.
@@ -27,11 +25,7 @@ public class GUI
      */
     public static void displayOutput(int[] numsOfChars)
     {
-        JOptionPane.showMessageDialog(null,
-                Backend.outputMessage(numsOfChars),
-                "Result",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+        JOptionPane.showMessageDialog(null, Backend.outputMessage(numsOfChars), "Result", JOptionPane.INFORMATION_MESSAGE);
     }
     /**
      * Prompts the user if they would like to send the contents of <code>displayOutput</code> to a file on the disk.
@@ -51,21 +45,16 @@ public class GUI
         JOptionPane.showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
-     * Runnable method for the GUI.
-     * @param args The command-line arguments, used only for the file output prompt.
+     * Primary method for the GUI.
      */
-    public static void main(String[] args)
+    public static void main()
     {
-        if (GraphicsEnvironment.isHeadless())
-        {
-            args = new String[1];
-            CLI.main(args);
-            return;
-        }
-
         do {
             String input = displayInput();
-            String data = Backend.parseData(input);
+            String parsedData = Backend.parseData(input);
+
+            String data = Config.applySettingsGUI(parsedData);
+
             if (input.equals(""))
             {
                 noInputError();
@@ -76,7 +65,7 @@ public class GUI
 
             displayOutput(numsOfChars);
 
-            if (args.length == 0)
+            if (!Config.getEnabledSettings()[1])
                 promptForFileOutput(Backend.outputMessage(numsOfChars));
         } while (true);
     }

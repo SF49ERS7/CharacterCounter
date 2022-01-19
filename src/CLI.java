@@ -8,14 +8,14 @@ public class CLI
     /**
      * Defines the <code>Scanner</code> variable for this class.
      */
-    private static Scanner keyboard = new Scanner(System.in);
+    private static final Scanner keyboard = new Scanner(System.in);
     /**
      * Asks the user for the input to count.
      * @return The prompted input.
      */
     public static String displayInput()
     {
-        System.out.println("Enter the input to count, or type ':quit' to exit");
+        System.out.println("Welcome to Character Counter version " + Backend.getProgramVersion() + "\nEnter the input to count, or type ':quit' to exit");
         return keyboard.nextLine();
     }
     /**
@@ -59,10 +59,9 @@ public class CLI
             Backend.sendToTextFile(output, false);
     }
     /**
-     * Runnable method for the CLI.
-     * @param args Command-line arguments passed from <code>Main.main()</code>.
+     * Primary method for the CLI.
      */
-    public static void main(String[] args)
+    public static void main()
     {
         String input = displayInput();
         String data = Backend.parseData(input);
@@ -76,7 +75,7 @@ public class CLI
 
         displayOutput(numsOfChars);
 
-        if (args.length == 1)
+        if (Config.getEnabledSettings()[1])
             promptForFileOutput(Backend.outputMessage(numsOfChars));
     }
 }

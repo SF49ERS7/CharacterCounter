@@ -9,9 +9,11 @@ public class Main
      */
     public static void main(String[] args)
     {
-        if (args.length != 0 && args[0].equals("-cmd"))
-            CLI.main(args);
+        Config.applySettingsCLI(args);
+
+        if (Config.getEnabledSettings()[0])
+            CLI.main();
         else
-            GUI.main(args);
+            GUI.main();
     }
 }
