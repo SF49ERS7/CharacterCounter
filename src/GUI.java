@@ -38,14 +38,14 @@ public class GUI
             Backend.sendToTextFile(output, true);
     }
     /**
-     * Sent when the user fails to provide input.
+     * Displays when the user fails to provide input.
      */
     public static void noInputError()
     {
         JOptionPane.showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
-     * Primary method for the GUI.
+     * Runs the GUI.
      */
     public static void main()
     {

@@ -19,7 +19,7 @@ public class CLI
         return keyboard.nextLine();
     }
     /**
-     * Thrown when the user provides no input.
+     * Displays when the user provides no input.
      */
     public static void noInputError()
     {
@@ -59,7 +59,7 @@ public class CLI
             Backend.sendToTextFile(output, false);
     }
     /**
-     * Primary method for the CLI.
+     * Runs the CLI.
      */
     public static void main()
     {

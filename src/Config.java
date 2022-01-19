@@ -27,7 +27,7 @@ public class Config
             enabledSettings[0] = true; //Even if the command line doesn't specify, we don't want to throw an exception unless the user really wants to
     }
     /**
-     * A getter for the settings.
+     * Gets the settings.
      * @return The settings.
      */
     public static boolean[] getEnabledSettings()

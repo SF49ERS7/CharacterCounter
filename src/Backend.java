@@ -2,7 +2,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 /**
  * Handles the parsing of inputted data, as well as the aforementioned outputting to a text file.
  */
@@ -56,7 +55,7 @@ public class Backend
         }
     }
     /**
-     * This method takes the <code>data</code> parameter and calculates how many of each character there are in it.
+     * Takes the <code>data</code> parameter and calculates how many of each character there are in it.
      * @param data The input generated at the beginning of the program.
      * @return The number of each characters found.
      */
@@ -110,7 +109,7 @@ public class Backend
         return numsOfChars;
     }
     /**
-     * This method formats the <code>numsOfChars</code> parameter to fit each number of characters.
+     * Formats the <code>numsOfChars</code> parameter to fit each number of characters.
      * @param numsOfChars The array that tells how many of each character there are.
      * @return A concatenated <code>String</code> with everything formatted.
      */
@@ -180,7 +179,7 @@ public class Backend
                 filterValues("Other Characters: ", numsOfChars[28], true);
     }
     /**
-     * This method ensures that only non-zero values are displayed to the user.
+     * Ensures that only non-zero values are displayed to the user.
      * @param prefix What character is being counted.
      * @param input The number of characters, pre-counted.
      * @param isAtTheEnd Determines if the value should have a carriage return or not.

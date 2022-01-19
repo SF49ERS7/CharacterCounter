@@ -4,7 +4,7 @@
 public class Main
 {
     /**
-     * The only runnable method in the whole program.
+     * Runs the program.
      * @param args Any inputted command-line arguments.
      */
     public static void main(String[] args)
