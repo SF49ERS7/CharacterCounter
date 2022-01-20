@@ -1,6 +1,6 @@
 import javax.swing.JOptionPane;
 /**
- *  Contains all the <code>JOptionPane</code> calls in this program, making it easy to modularize the program.
+ *  Contains all the <code>JOptionPane</code> calls in this program, making modularization easy
  */
 public class GUI
 {
@@ -35,7 +35,7 @@ public class GUI
     {
         int result = JOptionPane.showConfirmDialog(null, "Do you wish to send the previous output to a file?", "Output Question", JOptionPane.YES_NO_OPTION);
         if (result == 0)
-            Backend.sendToTextFile(output, true);
+            Backend.sendToTextFile(output);
     }
     /**
      * Displays when the user fails to provide input.
@@ -45,17 +45,30 @@ public class GUI
         JOptionPane.showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
+     * Displays when the user changes a setting.
+     * @param setting The setting that was changed.
+     */
+    public static void settingChanged(String setting)
+    {
+        JOptionPane.showMessageDialog(null, setting, "Info", JOptionPane.INFORMATION_MESSAGE);
+        Config.setEnabledSettingsManually(5, true);
+    }
+    /**
      * Runs the GUI.
      */
     public static void main()
     {
-        do {
+        for (long i = 0L; i < Long.MAX_VALUE; i++)
+        {
             String input = displayInput();
             String parsedData = Backend.parseData(input);
 
             String data = Config.applySettingsGUI(parsedData);
 
-            if (input.equals(""))
+            if (data.equals("") && Config.getEnabledSettings()[5])
+                continue;
+
+            if (data.equals(""))
             {
                 noInputError();
                 continue;
@@ -65,8 +78,8 @@ public class GUI
 
             displayOutput(numsOfChars);
 
-            if (!Config.getEnabledSettings()[1])
+            if (false)
                 promptForFileOutput(Backend.outputMessage(numsOfChars));
-        } while (true);
+        }
     }
 }

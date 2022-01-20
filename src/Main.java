@@ -9,9 +9,9 @@ public class Main
      */
     public static void main(String[] args)
     {
-        Config.applySettingsCLI(args);
+        Config.applySettingsGlobal(args);
 
-        if (Config.getEnabledSettings()[0])
+        if (Config.getRunUI().equals("CLI"))
             CLI.main();
         else
             GUI.main();

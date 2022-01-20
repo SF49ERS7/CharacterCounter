@@ -56,7 +56,7 @@ public class CLI
             System.out.println("That's not a valid input, so I take that as a no");
         }
         if (result)
-            Backend.sendToTextFile(output, false);
+            Backend.sendToTextFile(output);
     }
     /**
      * Runs the CLI.
@@ -75,7 +75,7 @@ public class CLI
 
         displayOutput(numsOfChars);
 
-        if (Config.getEnabledSettings()[1])
+        if (false)
             promptForFileOutput(Backend.outputMessage(numsOfChars));
     }
 }

@@ -2,6 +2,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 /**
  * Handles the parsing of inputted data, as well as the aforementioned outputting to a text file.
  */
@@ -10,7 +11,7 @@ public class Backend
     /**
      * Stores the program's version number
      */
-    private static final String programVersion = "0.3.0-alpha";
+    private static final String programVersion = "0.3.1-alpha";
     /**
      * Getter for <code>programVersion</code>.
      * @return The program's version.
@@ -36,9 +37,8 @@ public class Backend
     /**
      * Sends the <code>output</code> parameter to a file on the disk.
      * @param output The data to be sent to the disk.
-     * @param isGui A flag that determines whether or not this method was called by a GUI.
      */
-    public static void sendToTextFile(String output, boolean isGui)
+    public static void sendToTextFile(String output)
     {
         try {
             Date date = new Date(); // This object contains the current date value
@@ -48,7 +48,7 @@ public class Backend
             outputFile.write("#Character Counter File Output, by SF49ERS7\n#Version " + getProgramVersion() + "\n#Generated on " + formatter.format(date) + "\n\n" + output);
             outputFile.close();
         } catch (IOException e) {
-            if (isGui)
+            if (Config.getRunUI().equals("GUI"))
                 GUI.displayFileError();
             else
                 CLI.displayFileError();
