@@ -51,7 +51,7 @@ public class GUI
     public static void settingChanged(String setting)
     {
         JOptionPane.showMessageDialog(null, setting, "Info", JOptionPane.INFORMATION_MESSAGE);
-        Config.setEnabledSettingsManually(5, true);
+        Config.setChangedASettingOnCurrentRun(true);
     }
     /**
      * Runs the GUI.
@@ -65,7 +65,7 @@ public class GUI
 
             String data = Config.applySettingsGUI(parsedData);
 
-            if (data.equals("") && Config.getEnabledSettings()[5])
+            if (data.equals("") && Config.getChangedASettingOnCurrentRun())
                 continue;
 
             if (data.equals(""))
@@ -80,6 +80,7 @@ public class GUI
 
             if (false)
                 promptForFileOutput(Backend.outputMessage(numsOfChars));
+            Config.setChangedASettingOnCurrentRun(false);
         }
     }
 }

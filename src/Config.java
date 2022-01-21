@@ -13,13 +13,17 @@ public class Config
      */
     private static String runUI;
     /**
+     * Stores whether the current run of the GUI changed a setting.
+     */
+    private static boolean changedASettingOnCurrentRun;
+    /**
      * Sets <code>enabledSettings</code> with the settings from the command-line.
      *
      * @param args The settings to apply.
      */
     public static void applySettingsGlobal(String[] args)
     {
-        enabledSettings = new boolean[6];
+        enabledSettings = new boolean[5];
         if (args.length != 0)
             for (String arg : args)
             {
@@ -102,5 +106,15 @@ public class Config
     {
         if (runningUI.equals("GUI") || runningUI.equals("CLI"))
             Config.runUI = runningUI;
+    }
+
+    public static boolean getChangedASettingOnCurrentRun()
+    {
+        return changedASettingOnCurrentRun;
+    }
+
+    public static void setChangedASettingOnCurrentRun(boolean change)
+    {
+        changedASettingOnCurrentRun = change;
     }
 }
