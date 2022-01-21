@@ -6,5 +6,5 @@ To install the program, simply download the build for your operating system on [
 Alternatively, you can download the JAR and run it standalone.
 # Building
 To build the program, download the source code, add it to an IntelliJ project, and compile it.
-#Configuring
+# Configuring
 To see a list of settings, [click here](https://github.com/SF49ERS7/CharacterCounter/wiki/Arguments).
