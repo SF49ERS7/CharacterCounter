@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 /**
  * The class for the rarely-used command-line interface.
@@ -26,56 +25,30 @@ public class CLI
         System.out.println("Error: You gave no input. Please give an input and try again");
     }
     /**
-     * Displays when the file output request fails due to a write-protected disk. Rarely, if ever, used.
-     */
-    public static void displayFileError()
-    {
-        System.out.println("Error: Your disk is write-protected, so I cannot send the output to a file");
-    }
-
-    /**
      * Outputs a message by taking the <code>numsOfChars</code> parameter, and passing it to the <code>outputMessage()</code> method.
      * @param numsOfChars An array with at least 29 rows that is ordered correctly.
      */
-    public static void displayOutput(int[] numsOfChars)
+    public static void displayOutput(long[] numsOfChars)
     {
-        System.out.println(Backend.outputMessage(numsOfChars));
-    }
-
-    /**
-     *  Prompts the user if they would like to send the contents of <code>displayOutput</code> to a file on the disk.
-     * @param output The data to be written to the disk.
-     */
-    public static void promptForFileOutput(String output)
-    {
-        System.out.println("Do you wish to send the previous output to a file? Type 'true' if you do and 'false' if you don't");
-        boolean result = false;
-        try {
-            result = keyboard.nextBoolean();
-        } catch (InputMismatchException e) {
-            System.out.println("That's not a valid input, so I take that as a no");
-        }
-        if (result)
-            Backend.sendToTextFile(output);
+        System.out.print(Backend.outputMessage(numsOfChars));
     }
     /**
      * Runs the CLI.
      */
     public static void main()
     {
+        Config.setRunUI("CLI");
+
         String input = displayInput();
         String data = Backend.parseData(input);
         if (input.equals(""))
         {
             noInputError();
-            System.exit(0);
+            System.exit(1);
         }
 
-        int[] numsOfChars = Backend.charCounter(data);
+        long[] numsOfChars = Backend.charCounter(data);
 
         displayOutput(numsOfChars);
-
-        if (false)
-            promptForFileOutput(Backend.outputMessage(numsOfChars));
     }
 }
