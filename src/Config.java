@@ -13,10 +13,6 @@ public class Config
      */
     private static String runUI;
     /**
-     * Stores whether the current run of the GUI changed a setting.
-     */
-    private static boolean changedASettingOnCurrentRun;
-    /**
      * Sets <code>enabledSettings</code> with the settings from the command-line.
      *
      * @param args The settings to apply.
@@ -27,11 +23,12 @@ public class Config
         if (args.length != 0)
             for (String arg : args)
             {
-                switch (arg) {
+                switch (arg)
+                {
                     case "-cmd", "-cli" -> runUI = "CLI"; //Whether to force a command-line interface
                     case "-file" -> { //Whether to count input from a file
-                         runUI = "FileCounter";
-                         FileCounter.setPathToFile(args[1]);
+                        runUI = "FileCounter";
+                        FileCounter.setPathToFile(args[1]);
                     }
                     case "-allvals", "allvals" -> enabledSettings[2] = true; //Whether to show empty values in the output
                     case "-gui", "ui" -> runUI = "GUI"; //Whether to force a GUI
@@ -44,6 +41,7 @@ public class Config
     }
     /**
      * Gets the settings.
+     *
      * @return The settings.
      */
     public static boolean[] getEnabledSettings()
@@ -52,6 +50,7 @@ public class Config
     }
     /**
      * Getter for <code>runUI</code>.
+     *
      * @return <code>runUI</code>.
      */
     public static String getRunUI()
@@ -66,18 +65,5 @@ public class Config
     {
         if (runningUI.equals("GUI") || runningUI.equals("CLI") || runningUI.equals("FileCounter"))
             Config.runUI = runningUI;
-    }
-    /**
-     * Getter for <code>changedASettingOnCurrentRun</code>.
-     * @return <code>changedASettingOnCurrentRun</code>.
-     */
-    public static boolean getChangedASettingOnCurrentRun()
-    {
-        return changedASettingOnCurrentRun;
-    }
-
-    public static void setChangedASettingOnCurrentRun(boolean change)
-    {
-        changedASettingOnCurrentRun = change;
     }
 }
