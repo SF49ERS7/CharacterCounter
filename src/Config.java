@@ -21,7 +21,7 @@ public class Config
      *
      * @param args The settings to apply.
      */
-    public static void applySettingsGlobal(String[] args)
+    public static void applySettings(String[] args)
     {
         enabledSettings = new boolean[5];
         if (args.length != 0)
@@ -29,18 +29,18 @@ public class Config
             {
                 switch (arg) {
                     case "-cmd", "-cli" -> runUI = "CLI"; //Whether to force a command-line interface
-                    case "-fileio", "fileio" -> enabledSettings[1] = true; //Whether to enable the file IO, which is disabled by default in the CLI
+                    case "-file" -> { //Whether to count input from a file
+                         runUI = "FileCounter";
+                         FileCounter.setPathToFile(args[1]);
+                    }
                     case "-allvals", "allvals" -> enabledSettings[2] = true; //Whether to show empty values in the output
                     case "-gui", "ui" -> runUI = "GUI"; //Whether to force a GUI
-                    case "compiledBuild" -> enabledSettings[4] = true; //Whether to disable file IO completely, used in compiled builds
                 }
             }
         if (GraphicsEnvironment.isHeadless())
             runUI = "CLI"; //Even if the command line doesn't specify, we don't want to throw an exception
         if (runUI == null)
             runUI = "GUI";
-        if (runUI.equals("GUI") && !enabledSettings[4])
-            enabledSettings[1] = true;
     }
     /**
      * Gets the settings.
@@ -51,63 +51,26 @@ public class Config
         return enabledSettings;
     }
     /**
-     * Sets <code>enabledSettings</code> with the settings from the GUI input, and removes the arguments.
-     *
-     * @param input The inputted text.
-     * @return <code>input</code>, but with the arguments removed.
+     * Getter for <code>runUI</code>.
+     * @return <code>runUI</code>.
      */
-    public static String applySettingsGUI(String input)
-    {
-        StringBuilder filteredInput = new StringBuilder(input);
-
-//        if (input.contains(":::fileio:::")) //Whether to disable file IO, which is enabled by default in the GUI, except in compiled builds
-//        {
-//            if (!enabledSettings[4]) {
-//                enabledSettings[1] = true;
-//                filteredInput.delete(filteredInput.indexOf(":"), filteredInput.lastIndexOf(":"));
-//                filteredInput.deleteCharAt(filteredInput.indexOf(":"));
-//                if (enabledSettings[1])
-//                    GUI.settingChanged("File output is now disabled.");
-//                else
-//                    GUI.settingChanged("File output is now enabled.");
-//            }
-//        }
-        if (input.contains(":::allvals:::")) //Whether to show empty values in the output
-        {
-            enabledSettings[2] = !enabledSettings[2];
-            filteredInput.delete(filteredInput.indexOf(":"), filteredInput.lastIndexOf(":"));
-            filteredInput.deleteCharAt(filteredInput.indexOf(":"));
-            if (enabledSettings[2])
-                GUI.settingChanged("Empty variables now display.");
-            else
-                GUI.settingChanged("Empty variables no longer display");
-        }
-
-        return String.valueOf(filteredInput);
-    }
-    /**
-     * A setter for <code>enabledSettings</code>.
-     *
-     * @param setting The setting ID to change.
-     * @param value   The value to set it to.
-     */
-    public static void setEnabledSettingsManually(int setting, boolean value)
-    {
-        if (setting <= enabledSettings.length)
-            enabledSettings[setting] = value;
-    }
-
     public static String getRunUI()
     {
         return runUI;
     }
-
+    /**
+     * Setter for <code>runUI</code>.
+     * @param runningUI The UI to set the value to.
+     */
     public static void setRunUI(String runningUI)
     {
-        if (runningUI.equals("GUI") || runningUI.equals("CLI"))
+        if (runningUI.equals("GUI") || runningUI.equals("CLI") || runningUI.equals("FileCounter"))
             Config.runUI = runningUI;
     }
-
+    /**
+     * Getter for <code>changedASettingOnCurrentRun</code>.
+     * @return <code>changedASettingOnCurrentRun</code>.
+     */
     public static boolean getChangedASettingOnCurrentRun()
     {
         return changedASettingOnCurrentRun;
