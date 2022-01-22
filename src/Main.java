@@ -9,10 +9,12 @@ public class Main
      */
     public static void main(String[] args)
     {
-        Config.applySettingsGlobal(args);
+        Config.applySettings(args);
 
         if (Config.getRunUI().equals("CLI"))
             CLI.main();
+        else if (Config.getRunUI().equals("FileCounter"))
+            FileCounter.main();
         else
             GUI.main();
     }
