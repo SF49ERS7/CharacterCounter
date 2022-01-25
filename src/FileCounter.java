@@ -15,6 +15,8 @@ public class FileCounter
      */
     public static void main()
     {
+        System.out.println("Welcome to Character Counter version " + Backend.getProgramVersion());
+
         File file = new File(pathToFile);
         Scanner inputFile = null;
         try {
