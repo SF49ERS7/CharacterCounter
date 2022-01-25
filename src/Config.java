@@ -19,19 +19,21 @@ public class Config
      */
     public static void applySettings(String[] args)
     {
-        enabledSettings = new boolean[5];
+        enabledSettings = new boolean[3];
         if (args.length != 0)
-            for (String arg : args)
+            if (args[0].equals("--help") || args[0].equals("-h"))
+                CLI.displayHelp();
+            for (int i = 0; i < args.length; i++)
             {
-                switch (arg)
+                switch (args[i])
                 {
-                    case "-cmd", "-cli" -> runUI = "CLI"; //Whether to force a command-line interface
-                    case "-file" -> { //Whether to count input from a file
+                    case "--cmd", "--cli" -> runUI = "CLI"; //Whether to force a command-line interface
+                    case "--file" -> { //Whether to count input from a file
                         runUI = "FileCounter";
-                        FileCounter.setPathToFile(args[1]);
+                        FileCounter.setPathToFile(args[i + 1]);
                     }
-                    case "-allvals", "allvals" -> enabledSettings[2] = true; //Whether to show empty values in the output
-                    case "-gui", "ui" -> runUI = "GUI"; //Whether to force a GUI
+                    case "-allvals" -> enabledSettings[2] = true; //Whether to show empty values in the output
+                    case "--gui", "--ui" -> runUI = "GUI"; //Whether to force a GUI
                 }
             }
         if (GraphicsEnvironment.isHeadless())
