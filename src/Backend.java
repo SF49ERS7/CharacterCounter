@@ -7,7 +7,7 @@ public class Backend
     /**
      * Stores the program's version number
      */
-    private static final String programVersion = "0.4.0-alpha";
+    private static final String programVersion = "0.5.0-alpha";
     /**
      * Getter for <code>programVersion</code>.
      * @return The program's version.
