@@ -1,6 +1,6 @@
 import java.util.Scanner;
 /**
- * The class for the rarely-used command-line interface.
+ * The class for the command-line interface.
  */
 public class CLI
 {
@@ -16,6 +16,19 @@ public class CLI
     {
         System.out.println("Welcome to Character Counter version " + Backend.getProgramVersion() + "\nEnter the input to count, or type ':quit' to exit");
         return keyboard.nextLine();
+    }
+    /**
+     * Displays help.
+     */
+    public static void displayHelp()
+    {
+        System.out.println("Commands:\n");
+        System.out.println("\t-h, --help\t\t\tDisplays this message.\n");
+        System.out.println("\t--allvals\t\t\tDisplay empty values in the output\n");
+        System.out.println("\t--file \"/path/to/file.txt\"\tCounts the characters from a file rather than from your input.\n");
+        System.out.println("\t--cmd, --cli\t\t\tForce the command-line to run.\n");
+        System.out.println("\t--gui, --ui\t\t\tForce the GUI to run. WARNING: The program will crash if you do this in a headless environment.\n");
+        System.exit(0);
     }
     /**
      * Displays when the user provides no input.
