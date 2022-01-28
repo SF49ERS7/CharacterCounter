@@ -18,6 +18,6 @@ macOS:
 Debian/Ubuntu:
 - Run `rm -rf /opt/charactercounter` in the Terminal.
 # Configuring
-To see a list of options, [click here](https://github.com/SF49ERS7/CharacterCounter/wiki/Options).
+To see a list of command-line options, [click here](https://github.com/SF49ERS7/CharacterCounter/wiki/Command-line-Arguments).
 # Building
 To build the program, download the source code, add it to an IntelliJ IDEA project, and compile it.
