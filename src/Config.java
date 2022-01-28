@@ -24,18 +24,15 @@ public class Config
             if (args[0].equals("--help") || args[0].equals("-h"))
                 CLI.displayHelp();
             for (int i = 0; i < args.length; i++)
-            {
-                switch (args[i])
-                {
+                switch (args[i]) {
                     case "--cmd", "--cli" -> runUI = "CLI"; //Whether to force a command-line interface
                     case "--file" -> { //Whether to count input from a file
                         runUI = "FileCounter";
                         FileCounter.setPathToFile(args[i + 1]);
                     }
-                    case "-allvals" -> enabledSettings[2] = true; //Whether to show empty values in the output
+                    case "--allvals" -> enabledSettings[2] = true; //Whether to show empty values in the output
                     case "--gui", "--ui" -> runUI = "GUI"; //Whether to force a GUI
                 }
-            }
         if (GraphicsEnvironment.isHeadless())
             runUI = "CLI"; //Even if the command line doesn't specify, we don't want to throw an exception
         if (runUI == null)

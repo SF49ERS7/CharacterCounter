@@ -26,7 +26,7 @@ public class CLI
         System.out.println("\t-h, --help\t\t\tDisplays this message.\n");
         System.out.println("\t--allvals\t\t\tDisplay empty values in the output\n");
         System.out.println("\t--file \"/path/to/file.txt\"\tCounts the characters from a file rather than from your input.\n");
-        System.out.println("\t--cmd, --cli\t\t\tForce the command-line to run.\n");
+        System.out.println("\t--cmd, --cli\t\t\tForce the command-line to run. Recommended if using these commands.\n");
         System.out.println("\t--gui, --ui\t\t\tForce the GUI to run. WARNING: The program will crash if you do this in a headless environment.\n");
         System.exit(0);
     }
@@ -43,7 +43,7 @@ public class CLI
      */
     public static void displayOutput(long[] numsOfChars)
     {
-        System.out.print(Backend.outputMessage(numsOfChars));
+        System.out.println(Backend.outputMessage(numsOfChars));
     }
     /**
      * Runs the CLI.
