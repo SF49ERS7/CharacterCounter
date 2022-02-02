@@ -12,10 +12,14 @@ public class Main
         Config.applySettings(args);
 
         if (Config.getRunUI().equals("CLI"))
-            CLI.main();
-        else if (Config.getRunUI().equals("FileCounter"))
-            FileCounter.main();
+            if (Config.isCountFromFile())
+                CLI.fileCounter();
+            else
+                CLI.hid();
         else
-            GUI.main();
+            if (Config.isCountFromFile())
+                GUI.fileCounter();
+            else
+                GUI.hid();
     }
 }
