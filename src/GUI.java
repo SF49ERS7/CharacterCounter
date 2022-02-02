@@ -1,6 +1,9 @@
 import javax.swing.JOptionPane;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 /**
- *  Contains all the <code>JOptionPane</code> calls in this program, making modularization easy
+ *  Contains all the <code>JOptionPane</code> calls in this program, making modularization easy.
  */
 public class GUI
 {
@@ -10,10 +13,10 @@ public class GUI
      */
     public static String displayInput()
     {
-        return JOptionPane.showInputDialog(null, "Welcome to Character Counter version " + Backend.getProgramVersion() + "\nEnter the input to count", "Input", JOptionPane.QUESTION_MESSAGE);
+        return JOptionPane.showInputDialog(null, "Welcome to Character Counter, version " + Backend.getProgramVersion() + "\nEnter the input to count, or type ':file' to count from a file", "Input", JOptionPane.QUESTION_MESSAGE);
     }
     /**
-     * Displays a dialog box by taking the <code>numsOfChars</code> parameter, and passing it to the <code>outputMessage()</code> method.
+     * Displays a dialog box by taking <code>numsOfChars</code>, and passing it to <code>outputMessage()</code>.
      * @param numsOfChars An array with at least 29 rows that is ordered correctly.
      */
     public static void displayOutput(long[] numsOfChars)
@@ -28,12 +31,44 @@ public class GUI
         JOptionPane.showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
-     * Runs the GUI.
+     * Displays when the user provides a file that does not contain text.
      */
-    public static void main()
+    public static void invalidInputError()
     {
-        Config.setRunUI("GUI");
-
+        JOptionPane.showMessageDialog(null, "Error: File either contains no data, or is unreadable.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    /**
+     * Tests if the inputted data is empty.
+     * @param input The inputted data.
+     */
+    public static void testForNoData(String input)
+    {
+        if (input.length() == 0)
+            GUI.invalidInputError();
+    }
+    public static String fileInputFromGui()
+    {
+        return JOptionPane.showInputDialog(null, "Welcome to Character Counter File, version " + Backend.getProgramVersion() + "\nEnter the path to the file you wish to count from\nAlternatively, type ':goback' to go back", "Input", JOptionPane.QUESTION_MESSAGE);
+    }
+    public static void resetFileInputPath()
+    {
+        if (!Config.isCountFromFile())
+            Config.setPathToFile(null);
+        else
+            System.exit(0);
+    }
+    /**
+     * Displays when the user provides a file path that doesn't work.
+     */
+    public static void noFileError()
+    {
+        JOptionPane.showMessageDialog(null, "Error: I could not find the file you specified.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    /**
+     * Runs the GUI by counting from human input.
+     */
+    public static void hid()
+    {
         for (long i = 0L; i < Long.MAX_VALUE; i++)
         {
             String input = displayInput();
@@ -44,10 +79,55 @@ public class GUI
                 noInputError();
                 continue;
             }
+            else if (parsedData.equals(":file"))
+            {
+                fileCounter();
+                continue;
+            }
 
             long[] numsOfChars = Backend.charCounter(parsedData);
 
             displayOutput(numsOfChars);
+        }
+    }
+    /**
+     * Runs the CLI by counting from a file on disk.
+     */
+    public static void fileCounter()
+    {
+        for (long i = 0; i < Long.MAX_VALUE; i++)
+        {
+            if (Config.getPathToFile() == null)
+            {
+                String input = fileInputFromGui();
+                if (input.equals(":goback"))
+                    return;
+                else if (input.equals(":quit"))
+                    System.exit(0);
+                Config.setPathToFile(input);
+            }
+            File file = new File(Config.getPathToFile());
+            Scanner inputFile;
+            try {
+                inputFile = new Scanner(file);
+            } catch (FileNotFoundException e) {
+                noFileError();
+                resetFileInputPath();
+                continue;
+            }
+            StringBuilder dataIn1Line = new StringBuilder();
+
+            while (inputFile.hasNextLine())
+                dataIn1Line.append(inputFile.nextLine());
+
+            String input = String.valueOf(dataIn1Line);
+
+            testForNoData(input);
+            long[] numsOfChars = Backend.charCounter(input);
+
+            displayOutput(numsOfChars);
+
+            resetFileInputPath();
         }
     }
 }
