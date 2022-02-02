@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 /**
  * The class for the command-line interface.
@@ -38,7 +40,33 @@ public class CLI
         System.out.println("Error: You gave no input. Please give an input and try again");
     }
     /**
-     * Outputs a message by taking the <code>numsOfChars</code> parameter, and passing it to the <code>outputMessage()</code> method.
+     * Displays when the user provides a file that does not contain text.
+     */
+    public static void invalidInputError()
+    {
+        System.out.println("Error: File either contains no data, or is unreadable.");
+    }
+    /**
+     * Displays when the user provides a file path that doesn't work.
+     */
+    public static void noFileError()
+    {
+        System.out.println("Error: I could not find the file you specified.");
+    }
+    /**
+     * Tests if the inputted data is empty.
+     * @param input The inputted data.
+     */
+    public static void testForNoData(String input)
+    {
+        if (input.length() == 0)
+        {
+            CLI.invalidInputError();
+            System.exit(1);
+        }
+    }
+    /**
+     * Outputs a message by taking <code>numsOfChars</code>, and passing it to <code>outputMessage()</code>.
      * @param numsOfChars An array with at least 29 rows that is ordered correctly.
      */
     public static void displayOutput(long[] numsOfChars)
@@ -46,9 +74,9 @@ public class CLI
         System.out.println(Backend.outputMessage(numsOfChars));
     }
     /**
-     * Runs the CLI.
+     * Runs the CLI by counting from human input.
      */
-    public static void main()
+    public static void hid()
     {
         Config.setRunUI("CLI");
 
@@ -64,4 +92,32 @@ public class CLI
 
         displayOutput(numsOfChars);
     }
+    /**
+     * Runs the CLI by counting from a file on disk.
+     */
+    public static void fileCounter()
+    {
+        System.out.println("Welcome to Character Counter version " + Backend.getProgramVersion());
+
+        File file = new File(Config.getPathToFile());
+        Scanner inputFile = null;
+        try {
+            inputFile = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            noFileError();
+            System.exit(1);
+        }
+        StringBuilder dataIn1Line = new StringBuilder();
+
+        while (inputFile.hasNextLine())
+            dataIn1Line.append(inputFile.nextLine());
+
+        String input = String.valueOf(dataIn1Line);
+        testForNoData(input);
+        long[] numsOfChars = Backend.charCounter(input);
+
+        displayOutput(numsOfChars);
+        System.exit(0);
+    }
+
 }
