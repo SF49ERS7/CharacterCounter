@@ -7,7 +7,7 @@ public class Backend
     /**
      * Stores the program's version number
      */
-    private static final String programVersion = "0.5.1-alpha";
+    private static final String programVersion = "0.6.0-alpha";
     /**
      * Getter for <code>programVersion</code>.
      * @return The program's version.
@@ -91,7 +91,7 @@ public class Backend
      */
     public static String outputMessage(long[] numsOfChars)
     {
-        if (Config.getEnabledSettings()[2])
+        if (Config.isShowAllVals())
             return "Number of characters:\n" +
                     "A: " + format(numsOfChars[0]) + "\n" +
                     "B: " + format(numsOfChars[1]) + "\n" +
@@ -163,7 +163,7 @@ public class Backend
      */
     public static String filterValues(String prefix, long input, boolean isAtTheEnd)
     {
-        if (input == 0 && !Config.getEnabledSettings()[2])
+        if (input == 0 && !Config.isShowAllVals())
             return "";
         else if (!isAtTheEnd)
             return prefix + format(input) + "\n";
