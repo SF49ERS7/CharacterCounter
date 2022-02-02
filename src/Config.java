@@ -5,13 +5,30 @@ import java.awt.GraphicsEnvironment;
 public class Config
 {
     /**
-     * Holds the settings.
-     */
-    private static boolean[] enabledSettings;
-    /**
      * Stores which UI is currently in use.
      */
     private static String runUI;
+    /**
+     * Stores whether to show all values in the output.
+     */
+    private static boolean showAllVals;
+    /**
+     * Stores whether to count input from a file, rather than from human input.
+     */
+    private static boolean countFromFile;
+    /**
+     * Stores the path to the file, if counting from file.
+     */
+    private static String pathToFile;
+    /**
+     * Stores whether to force the GUI to run, under any circumstances.
+     */
+    private static boolean forceGUI;
+    /**
+     * Stores whether to force the CLI to run, under any circumstances.
+     */
+    private static boolean forceCLI;
+
     /**
      * Sets <code>enabledSettings</code> with the settings from the command-line.
      *
@@ -19,33 +36,27 @@ public class Config
      */
     public static void applySettings(String[] args)
     {
-        enabledSettings = new boolean[3];
         if (args.length != 0)
             if (args[0].equals("--help") || args[0].equals("-h"))
                 CLI.displayHelp();
             for (int i = 0; i < args.length; i++)
                 switch (args[i]) {
-                    case "--cmd", "--cli" -> runUI = "CLI"; //Whether to force a command-line interface
+                    case "--cmd", "--cli" -> forceCLI = true; //Whether to force a command-line interface
                     case "--file" -> { //Whether to count input from a file
-                        runUI = "FileCounter";
-                        FileCounter.setPathToFile(args[i + 1]);
+                        countFromFile = true;
+                        pathToFile = args[i + 1];
                     }
-                    case "--allvals" -> enabledSettings[2] = true; //Whether to show empty values in the output
-                    case "--gui", "--ui" -> runUI = "GUI"; //Whether to force a GUI
+                    case "--allvals" -> showAllVals = true; //Whether to show empty values in the output
+                    case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
                 }
-        if (GraphicsEnvironment.isHeadless())
+        if (GraphicsEnvironment.isHeadless() && !forceGUI)
             runUI = "CLI"; //Even if the command line doesn't specify, we don't want to throw an exception
+        if (forceGUI)
+            runUI = "GUI";
+        if (forceCLI)
+            runUI = "CLI";
         if (runUI == null)
             runUI = "GUI";
-    }
-    /**
-     * Gets the settings.
-     *
-     * @return The settings.
-     */
-    public static boolean[] getEnabledSettings()
-    {
-        return enabledSettings;
     }
     /**
      * Getter for <code>runUI</code>.
@@ -64,5 +75,33 @@ public class Config
     {
         if (runningUI.equals("GUI") || runningUI.equals("CLI") || runningUI.equals("FileCounter"))
             Config.runUI = runningUI;
+    }
+    /**
+     * Getter for <code>showAllVals</code>.
+     * @return <code>showAllVals</code>.
+     */
+    public static boolean isShowAllVals()
+    {
+        return showAllVals;
+    }
+    /**
+     * Getter for <code>countFromFile</code>.
+     * @return <code>countFromFile</code>.
+     */
+    public static boolean isCountFromFile()
+    {
+        return countFromFile;
+    }
+    /**
+     * Getter for <code>pathToFile</code>.
+     * @return <code>pathToFile</code>.
+     */
+    public static String getPathToFile()
+    {
+        return pathToFile;
+    }
+    public static void setPathToFile(String pathToFile)
+    {
+        Config.pathToFile = pathToFile;
     }
 }
