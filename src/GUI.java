@@ -41,10 +41,15 @@ public class GUI
      * Tests if the inputted data is empty.
      * @param input The inputted data.
      */
-    public static void testForNoData(String input)
+    public static boolean testForNoData(String input)
     {
+        boolean foundNoData = false;
         if (input.length() == 0)
+        {
             GUI.invalidInputError();
+            foundNoData = true;
+        }
+        return foundNoData;
     }
     public static String fileInputFromGui()
     {
@@ -122,7 +127,11 @@ public class GUI
 
             String input = String.valueOf(dataIn1Line);
 
-            testForNoData(input);
+            if (testForNoData(input))
+            {
+                resetFileInputPath();
+                continue;
+            }
             long[] numsOfChars = Backend.charCounter(input);
 
             displayOutput(numsOfChars);
