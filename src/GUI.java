@@ -2,6 +2,10 @@ import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import static javax.swing.JOptionPane.showInputDialog;
+import static javax.swing.JOptionPane.showMessageDialog;
+
 /**
  *  Contains all the <code>JOptionPane</code> calls in this program, making modularization easy.
  */
@@ -13,7 +17,7 @@ public class GUI
      */
     public static String displayInput()
     {
-        return JOptionPane.showInputDialog(null, "Welcome to Character Counter, version " + Backend.getProgramVersion() + "\nEnter the input to count, or type ':file' to count from a file", "Input", JOptionPane.QUESTION_MESSAGE);
+        return showInputDialog(null, "Welcome to Character Counter, version " + Backend.getProgramVersion() + "\nEnter the input to count, or type ':file' to count from a file", "Input", JOptionPane.QUESTION_MESSAGE);
     }
     /**
      * Displays a dialog box by taking <code>numsOfChars</code>, and passing it to <code>outputMessage()</code>.
@@ -21,21 +25,21 @@ public class GUI
      */
     public static void displayOutput(long[] numsOfChars)
     {
-        JOptionPane.showMessageDialog(null, Backend.outputMessage(numsOfChars), "Result", JOptionPane.INFORMATION_MESSAGE);
+        showMessageDialog(null, Backend.outputMessage(numsOfChars), "Result", JOptionPane.INFORMATION_MESSAGE);
     }
     /**
      * Displays when the user fails to provide input.
      */
     public static void noInputError()
     {
-        JOptionPane.showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
      * Displays when the user provides a file that does not contain text.
      */
     public static void invalidInputError()
     {
-        JOptionPane.showMessageDialog(null, "Error: File either contains no data, or is unreadable.", "Error", JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(null, "Error: File either contains no data, or is unreadable.", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
      * Tests if the inputted data is empty.
@@ -46,14 +50,14 @@ public class GUI
         boolean foundNoData = false;
         if (input.length() == 0)
         {
-            GUI.invalidInputError();
+            invalidInputError();
             foundNoData = true;
         }
         return foundNoData;
     }
     public static String fileInputFromGui()
     {
-        return JOptionPane.showInputDialog(null, "Welcome to Character Counter File, version " + Backend.getProgramVersion() + "\nEnter the path to the file you wish to count from\nAlternatively, type ':goback' to go back", "Input", JOptionPane.QUESTION_MESSAGE);
+        return showInputDialog(null, "Welcome to Character Counter File, version " + Backend.getProgramVersion() + "\nEnter the path to the file you wish to count from\nAlternatively, type ':goback' to go back", "Input", JOptionPane.QUESTION_MESSAGE);
     }
     public static void resetFileInputPath()
     {
@@ -67,7 +71,7 @@ public class GUI
      */
     public static void noFileError()
     {
-        JOptionPane.showMessageDialog(null, "Error: I could not find the file you specified.", "Error", JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(null, "Error: I could not find the file you specified.", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
      * Runs the GUI by counting from human input.
@@ -105,10 +109,15 @@ public class GUI
             if (Config.getPathToFile() == null)
             {
                 String input = fileInputFromGui();
-                if (input.equals(":goback"))
-                    return;
-                else if (input.equals(":quit"))
-                    System.exit(0);
+                switch (input) {
+                    case ":goback":
+                        return;
+                    case ":quit":
+                        System.exit(0);
+                    case "":
+                        noInputError();
+                        continue;
+                }
                 Config.setPathToFile(input);
             }
             File file = new File(Config.getPathToFile());
