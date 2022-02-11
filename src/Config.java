@@ -43,8 +43,13 @@ public class Config
                 switch (args[i]) {
                     case "--cmd", "--cli" -> forceCLI = true; //Whether to force a command-line interface
                     case "--file" -> { //Whether to count input from a file
-                        countFromFile = true;
-                        pathToFile = args[i + 1];
+                        if (args.length >= 2)
+                        {
+                            countFromFile = true;
+                            pathToFile = args[i + 1];
+                        }
+                        else
+                            CLI.invalidArgsError();
                     }
                     case "--allvals" -> showAllVals = true; //Whether to show empty values in the output
                     case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
@@ -100,6 +105,10 @@ public class Config
     {
         return pathToFile;
     }
+    /**
+     * Setter for <code>pathToFile</code>.
+     * @param pathToFile What to set <code>pathToFile</code> to.
+     */
     public static void setPathToFile(String pathToFile)
     {
         Config.pathToFile = pathToFile;
