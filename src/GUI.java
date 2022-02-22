@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import static javax.swing.JOptionPane.showInputDialog;
 import static javax.swing.JOptionPane.showMessageDialog;
-
 /**
  *  Contains all the <code>JOptionPane</code> calls in this program, making modularization easy.
  */
@@ -55,10 +54,17 @@ public class GUI
         }
         return foundNoData;
     }
+    /**
+     * Displays a dialog box with a text prompt, asking for a path to a file.
+     * @return The file path.
+     */
     public static String fileInputFromGui()
     {
         return showInputDialog(null, "Welcome to Character Counter File, version " + Backend.getProgramVersion() + "\nEnter the path to the file you wish to count from\nAlternatively, type ':goback' to go back", "Input", JOptionPane.QUESTION_MESSAGE);
     }
+    /**
+     * Runs after counting of a file is completed.
+     */
     public static void resetFileInputPath()
     {
         if (!Config.isCountFromFile())
