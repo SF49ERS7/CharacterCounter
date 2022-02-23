@@ -1,3 +1,5 @@
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,7 +62,25 @@ public class GUI
      */
     public static String fileInputFromGui()
     {
-        return showInputDialog(null, "Welcome to Character Counter File, version " + Backend.getProgramVersion() + "\nEnter the path to the file you wish to count from\nAlternatively, type ':goback' to go back", "Input", JOptionPane.QUESTION_MESSAGE);
+        //return showInputDialog(null, "Welcome to Character Counter File, version " + Backend.getProgramVersion() + "\nEnter the path to the file you wish to count from\nAlternatively, type ':goback' to go back", "Input", JOptionPane.QUESTION_MESSAGE);
+        JFrame frame = new JFrame("Input");
+        JFileChooser chooser = new JFileChooser(Config.getPathToFolder());
+        frame.setSize(1, 1);
+        frame.setVisible(true);
+        frame.setVisible(false);
+        chooser.setDialogTitle("Select the file to count from");
+        int returnVal = chooser.showOpenDialog(frame);
+        switch (returnVal) {
+            case JFileChooser.APPROVE_OPTION -> {
+                Config.setPathToFolder(Backend.formatPathToFolder(chooser.getSelectedFile().getAbsolutePath(), chooser.getSelectedFile().getName()));
+                return chooser.getSelectedFile().getAbsolutePath();
+            }
+            case JFileChooser.CANCEL_OPTION -> {
+                return ":goback";
+            }
+            case JFileChooser.ERROR_OPTION -> System.exit(1);
+        }
+        return ":quit";
     }
     /**
      * Runs after counting of a file is completed.

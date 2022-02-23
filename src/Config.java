@@ -21,6 +21,10 @@ public class Config
      */
     private static String pathToFile;
     /**
+     * Stores the path to the folder containing the file, if counting from file.
+     */
+    private static String pathToFolder;
+    /**
      * Stores whether to force the GUI to run, under any circumstances.
      */
     private static boolean forceGUI;
@@ -28,7 +32,6 @@ public class Config
      * Stores whether to force the CLI to run, under any circumstances.
      */
     private static boolean forceCLI;
-
     /**
      * Sets <code>enabledSettings</code> with the settings from the command-line.
      *
@@ -112,5 +115,21 @@ public class Config
     public static void setPathToFile(String pathToFile)
     {
         Config.pathToFile = pathToFile;
+    }
+    /**
+     * Getter for <code>pathToFolder</code>.
+     * @return <code>pathToFolder</code>.
+     */
+    public static String getPathToFolder()
+    {
+        return pathToFolder;
+    }
+    /**
+     * Setter for <code>pathToFolder</code>.
+     * @param pathToFolder <code>pathToFolder</code>.
+     */
+    public static void setPathToFolder(String pathToFolder)
+    {
+        Config.pathToFolder = pathToFolder;
     }
 }
