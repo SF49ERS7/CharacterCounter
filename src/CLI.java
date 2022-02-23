@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import static java.lang.System.exit;
 import static java.lang.System.out;
-
 /**
  * The class for the command-line interface.
  */
@@ -83,7 +82,7 @@ public class CLI
      */
     public static void displayOutput(long[] numsOfChars)
     {
-        out.println(Backend.outputMessage(numsOfChars));
+        out.print(Backend.outputMessage(numsOfChars));
     }
     /**
      * Runs the CLI by counting from human input.
@@ -131,5 +130,4 @@ public class CLI
         displayOutput(numsOfChars);
         exit(0);
     }
-
 }
