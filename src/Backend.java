@@ -7,7 +7,7 @@ public class Backend
     /**
      * Stores the program's version number
      */
-    private static final String programVersion = "0.7.0-alpha";
+    private static final String programVersion = "dev";
     /**
      * Getter for <code>programVersion</code>.
      * @return The program's version.
@@ -124,51 +124,48 @@ public class Backend
                     "Other Characters: " + format(numsOfChars[28]);
         else
             return "Number of characters:\n" +
-                filterValues("A: ", numsOfChars[0], false) +
-                filterValues("B: ", numsOfChars[1], false) +
-                filterValues("C: ", numsOfChars[2], false) +
-                filterValues("D: ", numsOfChars[3], false) +
-                filterValues("E: ", numsOfChars[4], false) +
-                filterValues("F: ", numsOfChars[5], false) +
-                filterValues("G: ", numsOfChars[6], false) +
-                filterValues("H: ", numsOfChars[7], false) +
-                filterValues("I: ", numsOfChars[8], false) +
-                filterValues("J: ", numsOfChars[9], false) +
-                filterValues("K: ", numsOfChars[10], false) +
-                filterValues("L: ", numsOfChars[11], false) +
-                filterValues("M: ", numsOfChars[12], false) +
-                filterValues("N: ", numsOfChars[13], false) +
-                filterValues("O: ", numsOfChars[14], false) +
-                filterValues("P: ", numsOfChars[15], false) +
-                filterValues("Q: ", numsOfChars[16], false) +
-                filterValues("R: ", numsOfChars[17], false) +
-                filterValues("S: ", numsOfChars[18], false) +
-                filterValues("T: ", numsOfChars[19], false) +
-                filterValues("U: ", numsOfChars[20], false) +
-                filterValues("V: ", numsOfChars[21], false) +
-                filterValues("W: ", numsOfChars[22], false) +
-                filterValues("X: ", numsOfChars[23], false) +
-                filterValues("Y: ", numsOfChars[24], false) +
-                filterValues("Z: ", numsOfChars[25], false) +
-                filterValues("Numbers: ", numsOfChars[26], false) +
-                filterValues("Spaces: ", numsOfChars[27], false) +
-                filterValues("Other Characters: ", numsOfChars[28], true);
+                filterValues("A: ", numsOfChars[0]) +
+                filterValues("B: ", numsOfChars[1]) +
+                filterValues("C: ", numsOfChars[2]) +
+                filterValues("D: ", numsOfChars[3]) +
+                filterValues("E: ", numsOfChars[4]) +
+                filterValues("F: ", numsOfChars[5]) +
+                filterValues("G: ", numsOfChars[6]) +
+                filterValues("H: ", numsOfChars[7]) +
+                filterValues("I: ", numsOfChars[8]) +
+                filterValues("J: ", numsOfChars[9]) +
+                filterValues("K: ", numsOfChars[10]) +
+                filterValues("L: ", numsOfChars[11]) +
+                filterValues("M: ", numsOfChars[12]) +
+                filterValues("N: ", numsOfChars[13]) +
+                filterValues("O: ", numsOfChars[14]) +
+                filterValues("P: ", numsOfChars[15]) +
+                filterValues("Q: ", numsOfChars[16]) +
+                filterValues("R: ", numsOfChars[17]) +
+                filterValues("S: ", numsOfChars[18]) +
+                filterValues("T: ", numsOfChars[19]) +
+                filterValues("U: ", numsOfChars[20]) +
+                filterValues("V: ", numsOfChars[21]) +
+                filterValues("W: ", numsOfChars[22]) +
+                filterValues("X: ", numsOfChars[23]) +
+                filterValues("Y: ", numsOfChars[24]) +
+                filterValues("Z: ", numsOfChars[25]) +
+                filterValues("Numbers: ", numsOfChars[26]) +
+                filterValues("Spaces: ", numsOfChars[27]) +
+                filterValues("Other Characters: ", numsOfChars[28]);
     }
     /**
      * Ensures that only non-zero values are displayed to the user.
      * @param prefix What character is being counted.
      * @param input The number of characters, pre-counted.
-     * @param isAtTheEnd Determines if the value should have a carriage return or not.
      * @return The filtered and formatted value.
      */
-    public static String filterValues(String prefix, long input, boolean isAtTheEnd)
+    public static String filterValues(String prefix, long input)
     {
         if (input == 0 && !Config.isShowAllVals())
             return "";
-        else if (!isAtTheEnd)
-            return prefix + format(input) + "\n";
         else
-            return prefix + format(input);
+            return prefix + format(input) + "\n";
     }
     /**
      * Formats an inputted number.
@@ -179,5 +176,11 @@ public class Backend
     {
         DecimalFormat formatter = new DecimalFormat("#,###");
         return formatter.format(input);
+    }
+    public static String formatPathToFolder(String pathToFile, String fileName)
+    {
+        StringBuilder sb = new StringBuilder(pathToFile);
+        sb.delete(sb.indexOf(fileName), sb.length());
+        return String.valueOf(sb);
     }
 }
