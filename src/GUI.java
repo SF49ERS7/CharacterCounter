@@ -57,12 +57,11 @@ public class GUI
         return foundNoData;
     }
     /**
-     * Displays a dialog box with a text prompt, asking for a path to a file.
+     * Displays a <code>JFileChooser</code> prompt, asking for a file.
      * @return The file path.
      */
     public static String fileInputFromGui()
     {
-        //return showInputDialog(null, "Welcome to Character Counter File, version " + Backend.getProgramVersion() + "\nEnter the path to the file you wish to count from\nAlternatively, type ':goback' to go back", "Input", JOptionPane.QUESTION_MESSAGE);
         JFrame frame = new JFrame("Input");
         JFileChooser chooser = new JFileChooser(Config.getPathToFolder());
         frame.setSize(1, 1);
