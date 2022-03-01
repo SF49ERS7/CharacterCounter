@@ -20,6 +20,6 @@ public class Main
             if (Config.isCountFromFile())
                 GUI.fileCounter();
             else
-                GUI.hid();
+                GUI.main();
     }
 }
