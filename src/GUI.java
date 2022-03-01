@@ -5,9 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import static java.util.Objects.requireNonNullElse;
 import static javax.swing.JOptionPane.showInputDialog;
 import static javax.swing.JOptionPane.showMessageDialog;
-/**
+ /**
  *  Contains all the <code>JOptionPane</code> calls in this program, making modularization easy.
  */
 public class GUI
@@ -16,9 +17,10 @@ public class GUI
      * Displays a dialog box with a text prompt, asking for an input.
      * @return The input provided by the user.
      */
-    public static String displayInput()
+    public static String displayHIDInput()
     {
-        return showInputDialog(null, "Welcome to Character Counter, version " + Backend.getProgramVersion() + "\nEnter the input to count, or type ':file' to count from a file", "Input", JOptionPane.QUESTION_MESSAGE);
+        String input = showInputDialog(null, "Enter the input to count\nAlternatively, type ':goback' to go back", "Input", JOptionPane.QUESTION_MESSAGE);
+        return requireNonNullElse(input, ":goback");
     }
     /**
      * Displays a dialog box by taking <code>numsOfChars</code>, and passing it to <code>outputMessage()</code>.
@@ -48,13 +50,12 @@ public class GUI
      */
     public static boolean testForNoData(String input)
     {
-        boolean foundNoData = false;
         if (input.length() == 0)
         {
             invalidInputError();
-            foundNoData = true;
+            return true;
         }
-        return foundNoData;
+        return false;
     }
     /**
      * Displays a <code>JFileChooser</code> prompt, asking for a file.
@@ -96,27 +97,42 @@ public class GUI
      */
     public static void noFileError()
     {
-        showMessageDialog(null, "Error: I could not find the file you specified.", "Error", JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(null, "Error: The file does not exist, or is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
     }
     /**
-     * Runs the GUI by counting from human input.
+     * Runs the initial GUI.
+     */
+    public static void main()
+    {
+        for (long i = 0L; i < Long.MAX_VALUE; i++)
+        {
+            Object[] options = new Object[]{"From inputted text", "From a file", "Cancel"};
+            int n = JOptionPane.showOptionDialog(null, "Welcome to Character Counter, version " + Backend.getProgramVersion() + "\nHow would you like to count?", "Input", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            switch (n) {
+                case 0 -> hid();
+                case 1 -> fileCounter();
+                default -> System.exit(0);
+            }
+        }
+    }
+    /**
+     * Runs the GUI that counts from human input.
      */
     public static void hid()
     {
         for (long i = 0L; i < Long.MAX_VALUE; i++)
         {
-            String input = displayInput();
+            String input = displayHIDInput();
             String parsedData = Backend.parseData(input);
 
-            if (parsedData.equals(""))
-            {
-                noInputError();
-                continue;
-            }
-            else if (parsedData.equals(":file"))
-            {
-                fileCounter();
-                continue;
+            switch (parsedData) {
+                case "" -> {
+                    noInputError();
+                    continue;
+                }
+                case ":goback" -> {
+                    return;
+                }
             }
 
             long[] numsOfChars = Backend.charCounter(parsedData);
@@ -125,7 +141,7 @@ public class GUI
         }
     }
     /**
-     * Runs the CLI by counting from a file on disk.
+     * Runs the GUI that counts from a file on disk.
      */
     public static void fileCounter()
     {
@@ -146,6 +162,12 @@ public class GUI
                 Config.setPathToFile(input);
             }
             File file = new File(Config.getPathToFile());
+            if (!file.exists())
+            {
+                noFileError();
+                resetFileInputPath();
+                continue;
+            }
             Scanner inputFile;
             try {
                 inputFile = new Scanner(file);
