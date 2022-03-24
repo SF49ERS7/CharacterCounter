@@ -1,4 +1,8 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 /**
  * Handles the parsing of inputted data.
  */
@@ -37,7 +41,7 @@ public class Backend
      */
     public static long[] charCounter(String data)
     {
-        long[] numsOfChars = new long[29];
+        long[] numsOfChars = new long[39];
         for (long num : numsOfChars)
             numsOfChars[(int) num] = 0;
 
@@ -69,19 +73,20 @@ public class Backend
                 case 'x' -> numsOfChars[23]++;
                 case 'y' -> numsOfChars[24]++;
                 case 'z' -> numsOfChars[25]++;
-                case '1' -> numsOfChars[26]++;
-                case '2' -> numsOfChars[26]++;
-                case '3' -> numsOfChars[26]++;
-                case '4' -> numsOfChars[26]++;
-                case '5' -> numsOfChars[26]++;
-                case '6' -> numsOfChars[26]++;
-                case '7' -> numsOfChars[26]++;
-                case '8' -> numsOfChars[26]++;
-                case '9' -> numsOfChars[26]++;
                 case '0' -> numsOfChars[26]++;
-                case ' ' -> numsOfChars[27]++;
-                default -> numsOfChars[28]++;
+                case '1' -> numsOfChars[27]++;
+                case '2' -> numsOfChars[28]++;
+                case '3' -> numsOfChars[29]++;
+                case '4' -> numsOfChars[30]++;
+                case '5' -> numsOfChars[31]++;
+                case '6' -> numsOfChars[32]++;
+                case '7' -> numsOfChars[33]++;
+                case '8' -> numsOfChars[34]++;
+                case '9' -> numsOfChars[35]++;
+                case ' ' -> numsOfChars[36]++;
+                default -> numsOfChars[37]++;
             }
+        numsOfChars[38] = data.length();
         return numsOfChars;
     }
     /**
@@ -91,68 +96,53 @@ public class Backend
      */
     public static String outputMessage(long[] numsOfChars)
     {
-        if (Config.isShowAllVals())
-            return "Number of characters:\n" +
-                    "A: " + format(numsOfChars[0]) + "\n" +
-                    "B: " + format(numsOfChars[1]) + "\n" +
-                    "C: " + format(numsOfChars[2]) + "\n" +
-                    "D: " + format(numsOfChars[3]) + "\n" +
-                    "E: " + format(numsOfChars[4]) + "\n" +
-                    "F: " + format(numsOfChars[5]) + "\n" +
-                    "G: " + format(numsOfChars[6]) + "\n" +
-                    "H: " + format(numsOfChars[7]) + "\n" +
-                    "I: " + format(numsOfChars[8]) + "\n" +
-                    "J: " + format(numsOfChars[9]) + "\n" +
-                    "K: " + format(numsOfChars[10]) + "\n" +
-                    "L: " + format(numsOfChars[11]) + "\n" +
-                    "M: " + format(numsOfChars[12]) + "\n" +
-                    "N: " + format(numsOfChars[13]) + "\n" +
-                    "O: " + format(numsOfChars[14]) + "\n" +
-                    "P: " + format(numsOfChars[15]) + "\n" +
-                    "Q: " + format(numsOfChars[16]) + "\n" +
-                    "R: " + format(numsOfChars[17]) + "\n" +
-                    "S: " + format(numsOfChars[18]) + "\n" +
-                    "T: " + format(numsOfChars[19]) + "\n" +
-                    "U: " + format(numsOfChars[20]) + "\n" +
-                    "V: " + format(numsOfChars[21]) + "\n" +
-                    "W: " + format(numsOfChars[22]) + "\n" +
-                    "X: " + format(numsOfChars[23]) + "\n" +
-                    "Y: " + format(numsOfChars[24]) + "\n" +
-                    "Z: " + format(numsOfChars[25]) + "\n" +
-                    "Numbers: " + format(numsOfChars[26]) + "\n" +
-                    "Spaces: " + format(numsOfChars[27]) + "\n" +
-                    "Other Characters: " + format(numsOfChars[28]);
+        StringBuilder sb = new StringBuilder("Number of characters:\n");
+        sb.append(filterValues("A: ", numsOfChars[0]));
+        sb.append(filterValues("B: ", numsOfChars[1]));
+        sb.append(filterValues("C: ", numsOfChars[2]));
+        sb.append(filterValues("D: ", numsOfChars[3]));
+        sb.append(filterValues("E: ", numsOfChars[4]));
+        sb.append(filterValues("F: ", numsOfChars[5]));
+        sb.append(filterValues("G: ", numsOfChars[6]));
+        sb.append(filterValues("H: ", numsOfChars[7]));
+        sb.append(filterValues("I: ", numsOfChars[8]));
+        sb.append(filterValues("J: ", numsOfChars[9]));
+        sb.append(filterValues("K: ", numsOfChars[10]));
+        sb.append(filterValues("L: ", numsOfChars[11]));
+        sb.append(filterValues("M: ", numsOfChars[12]));
+        sb.append(filterValues("N: ", numsOfChars[13]));
+        sb.append(filterValues("O: ", numsOfChars[14]));
+        sb.append(filterValues("P: ", numsOfChars[15]));
+        sb.append(filterValues("Q: ", numsOfChars[16]));
+        sb.append(filterValues("R: ", numsOfChars[17]));
+        sb.append(filterValues("S: ", numsOfChars[18]));
+        sb.append(filterValues("T: ", numsOfChars[19]));
+        sb.append(filterValues("U: ", numsOfChars[20]));
+        sb.append(filterValues("V: ", numsOfChars[21]));
+        sb.append(filterValues("W: ", numsOfChars[22]));
+        sb.append(filterValues("X: ", numsOfChars[23]));
+        sb.append(filterValues("Y: ", numsOfChars[24]));
+        sb.append(filterValues("Z: ", numsOfChars[25]));
+        if (Config.isShowNumsIndependently())
+        {
+            sb.append(filterValues("0: ", numsOfChars[26]));
+            sb.append(filterValues("1: ", numsOfChars[27]));
+            sb.append(filterValues("2: ", numsOfChars[28]));
+            sb.append(filterValues("3: ", numsOfChars[29]));
+            sb.append(filterValues("4: ", numsOfChars[30]));
+            sb.append(filterValues("5: ", numsOfChars[31]));
+            sb.append(filterValues("6: ", numsOfChars[32]));
+            sb.append(filterValues("7: ", numsOfChars[33]));
+            sb.append(filterValues("8: ", numsOfChars[34]));
+            sb.append(filterValues("9: ", numsOfChars[35]));
+        }
         else
-            return "Number of characters:\n" +
-                filterValues("A: ", numsOfChars[0]) +
-                filterValues("B: ", numsOfChars[1]) +
-                filterValues("C: ", numsOfChars[2]) +
-                filterValues("D: ", numsOfChars[3]) +
-                filterValues("E: ", numsOfChars[4]) +
-                filterValues("F: ", numsOfChars[5]) +
-                filterValues("G: ", numsOfChars[6]) +
-                filterValues("H: ", numsOfChars[7]) +
-                filterValues("I: ", numsOfChars[8]) +
-                filterValues("J: ", numsOfChars[9]) +
-                filterValues("K: ", numsOfChars[10]) +
-                filterValues("L: ", numsOfChars[11]) +
-                filterValues("M: ", numsOfChars[12]) +
-                filterValues("N: ", numsOfChars[13]) +
-                filterValues("O: ", numsOfChars[14]) +
-                filterValues("P: ", numsOfChars[15]) +
-                filterValues("Q: ", numsOfChars[16]) +
-                filterValues("R: ", numsOfChars[17]) +
-                filterValues("S: ", numsOfChars[18]) +
-                filterValues("T: ", numsOfChars[19]) +
-                filterValues("U: ", numsOfChars[20]) +
-                filterValues("V: ", numsOfChars[21]) +
-                filterValues("W: ", numsOfChars[22]) +
-                filterValues("X: ", numsOfChars[23]) +
-                filterValues("Y: ", numsOfChars[24]) +
-                filterValues("Z: ", numsOfChars[25]) +
-                filterValues("Numbers: ", numsOfChars[26]) +
-                filterValues("Spaces: ", numsOfChars[27]) +
-                filterValues("Other Characters: ", numsOfChars[28]);
+            sb.append(filterValues("Numbers: ", numsOfChars[26] + numsOfChars[27] + numsOfChars[28] + numsOfChars[29] + numsOfChars[30] + numsOfChars[31] + numsOfChars[32] + numsOfChars[33] + numsOfChars[34] + numsOfChars[35]));
+        sb.append(filterValues("Spaces: ", numsOfChars[36]));
+        sb.append(filterValues("Other Characters: ", numsOfChars[37]));
+        if (Config.isShowTotal())
+            sb.append(filterValues("Total Characters: ", numsOfChars[38]));
+        return String.valueOf(sb);
     }
     /**
      * Ensures that only non-zero values are displayed to the user.
@@ -162,7 +152,7 @@ public class Backend
      */
     public static String filterValues(String prefix, long input)
     {
-        if (input == 0 && !Config.isShowAllVals())
+        if (input == 0 && !Config.isShowEmptyVals())
             return "";
         else
             return prefix + format(input) + "\n";
@@ -177,10 +167,33 @@ public class Backend
         DecimalFormat formatter = new DecimalFormat("#,###");
         return formatter.format(input);
     }
+    /**
+     * Gets the path to the folder containing the file.
+     * @param pathToFile The file path.
+     * @param fileName The name of the file.
+     * @return The folder path.
+     */
     public static String formatPathToFolder(String pathToFile, String fileName)
     {
         StringBuilder sb = new StringBuilder(pathToFile);
         sb.delete(sb.indexOf(fileName), sb.length());
         return String.valueOf(sb);
+    }
+    /**
+     * Writes the output to a file.
+     * @param numsOfChars The array holding the counted characters.
+     * @param pathToFile The path to the file.
+     * @throws IOException If the directory is read-only.
+     */
+    public static void writeOutputToFile(long[] numsOfChars, String pathToFile) throws IOException
+    {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy 'at' HH:mm:ss a zzz");
+
+        FileWriter fw = new FileWriter(pathToFile);
+        fw.write("#Character Counter, version " + getProgramVersion() + "\n");
+        fw.write("#Generated on " + formatter.format(date) + "\n\n");
+        fw.write(outputMessage(numsOfChars));
+        fw.close();
     }
 }
