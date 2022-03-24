@@ -47,7 +47,7 @@ public class Config
      /**
      * Stores whether to show a settings button in the GUI.
      */
-    private static boolean showSettingsButton;
+    private static boolean showSettingsButton = true;
     /**
      * Sets <code>enabledSettings</code> with the settings from the command-line.
      *
@@ -72,7 +72,7 @@ public class Config
                     }
                     case "--allvals" -> showEmptyVals = true; //Whether to show empty values in the output
                     case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
-                    case "--config", "--cfg" -> showSettingsButton = true;
+                    case "--noconfig", "--nocfg" -> showSettingsButton = false;
                 }
         if (GraphicsEnvironment.isHeadless() && !forceGUI)
             runUI = "CLI"; //Even if the command line doesn't specify, we don't want to throw an exception
