@@ -9,9 +9,17 @@ public class Config
      */
     private static String runUI;
     /**
-     * Stores whether to show all values in the output.
+     * Stores whether to show the total number of characters in the output.
      */
-    private static boolean showAllVals;
+    private static boolean showTotal = true;
+    /**
+     * Stores whether to show empty values in the output.
+     */
+    private static boolean showEmptyVals;
+    /**
+     * Stores whether to show counted numbers individually, rather than in one line.
+     */
+    private static boolean showNumsIndependently = true;
     /**
      * Stores whether to count input from a file, rather than from human input.
      */
@@ -32,6 +40,14 @@ public class Config
      * Stores whether to force the CLI to run, under any circumstances.
      */
     private static boolean forceCLI;
+    /**
+     * Stores whether to send the output to a file.
+     */
+    private static boolean sendOutputToFile;
+     /**
+     * Stores whether to show a settings button in the GUI.
+     */
+    private static boolean showSettingsButton;
     /**
      * Sets <code>enabledSettings</code> with the settings from the command-line.
      *
@@ -54,8 +70,9 @@ public class Config
                         else
                             CLI.invalidArgsError();
                     }
-                    case "--allvals" -> showAllVals = true; //Whether to show empty values in the output
+                    case "--allvals" -> showEmptyVals = true; //Whether to show empty values in the output
                     case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
+                    case "--config", "--cfg" -> showSettingsButton = true;
                 }
         if (GraphicsEnvironment.isHeadless() && !forceGUI)
             runUI = "CLI"; //Even if the command line doesn't specify, we don't want to throw an exception
@@ -83,14 +100,6 @@ public class Config
     {
         if (runningUI.equals("GUI") || runningUI.equals("CLI") || runningUI.equals("FileCounter"))
             Config.runUI = runningUI;
-    }
-    /**
-     * Getter for <code>showAllVals</code>.
-     * @return <code>showAllVals</code>.
-     */
-    public static boolean isShowAllVals()
-    {
-        return showAllVals;
     }
     /**
      * Getter for <code>countFromFile</code>.
@@ -131,5 +140,74 @@ public class Config
     public static void setPathToFolder(String pathToFolder)
     {
         Config.pathToFolder = pathToFolder;
+    }
+    /**
+     * Getter for <code>sendOutputToFile</code>.
+     * @return <code>sendOutputToFile</code>.
+     */
+    public static boolean isSendOutputToFile()
+    {
+        return sendOutputToFile;
+    }
+    /**
+     * Setter for <code>sendOutputToFile</code>.
+     * @param sendOutputToFile <code>sendOutputToFile</code>.
+     */
+    public static void setSendOutputToFile(boolean sendOutputToFile)
+    {
+        Config.sendOutputToFile = sendOutputToFile;
+    }
+    /**
+     * Getter for <code>showTotal</code>.
+     * @return <code>showTotal</code>.
+     */
+    public static boolean isShowTotal()
+    {
+        return showTotal;
+    }
+    /**
+     * Getter for <code>showEmptyVals</code>.
+     * @return <code>showEmptyVals</code>.
+     */
+    public static boolean isShowEmptyVals()
+    {
+        return showEmptyVals;
+    }
+    /**
+     * Getter for <code>showNumsIndependently</code>.
+     * @return <code>showNumsIndependently</code>.
+     */
+    public static boolean isShowNumsIndependently()
+    {
+        return showNumsIndependently;
+    }
+    /**
+     * Getter for <code>showSettingsButton</code>.
+     * @return <code>showSettingsButton</code>.
+     */
+    public static boolean isShowSettingsButton()
+    {
+        return showSettingsButton;
+    }
+    /**
+     * Setter for <code>showTotal</code>.
+     */
+    public static void setShowTotal(boolean showTotal)
+    {
+        Config.showTotal = showTotal;
+    }
+    /**
+     * Setter for <code>showNumsIndependently</code>.
+     */
+    public static void setShowNumsIndependently(boolean showNumsIndependently)
+    {
+        Config.showNumsIndependently = showNumsIndependently;
+    }
+    /**
+     * Setter for <code>showEmptyVals</code>.
+     */
+    public static void setShowEmptyVals(boolean showEmptyVals)
+    {
+        Config.showEmptyVals = showEmptyVals;
     }
 }
