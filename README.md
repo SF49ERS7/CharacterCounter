@@ -17,6 +17,8 @@ macOS:
 
 Debian/Ubuntu:
 - Run `rm -rf /opt/charactercounter` in the Terminal.
+# Upgrading
+To upgrade to a new version, simply uninstall the old version, and install the new one.
 # Configuring
 To see a list of command-line options, [click here](https://github.com/SF49ERS7/CharacterCounter/wiki/Command-line-Arguments).
 # Building
