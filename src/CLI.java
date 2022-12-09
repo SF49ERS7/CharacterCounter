@@ -7,7 +7,7 @@ import static java.lang.System.out;
 /**
  * The class for the command-line interface.
  */
-public class CLI
+public class CLI implements UI
 {
     /**
      * Defines the <code>Scanner</code> variable for this class.
@@ -110,10 +110,9 @@ public class CLI
     {
         out.println("Welcome to Character Counter version " + Backend.getProgramVersion());
 
-        File file = new File(Config.getPathToFile());
         Scanner inputFile = null;
         try {
-            inputFile = new Scanner(file);
+            inputFile = new Scanner(new File(Config.getPathToFile()));
         } catch (FileNotFoundException e) {
             noFileError();
             exit(1);

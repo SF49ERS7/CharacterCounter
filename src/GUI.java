@@ -16,7 +16,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 /**
  *  Contains all the <code>JOptionPane</code> calls in this program, making modularization easy.
  */
-public class GUI
+public class GUI implements UI
 {
     /**
      * Displays a dialog box with a text prompt, asking for an input.
@@ -188,14 +188,16 @@ public class GUI
             if (Config.getPathToFile() == null)
             {
                 String input = fileInputFromGui();
-                switch (input) {
-                    case ":goback":
+                switch (input)
+                {
+                    case ":goback" -> {
                         return;
-                    case ":quit":
-                        System.exit(0);
-                    case "":
+                    }
+                    case ":quit" -> System.exit(0);
+                    case "" -> {
                         noInputError();
                         continue;
+                    }
                 }
                 Config.setPathToFile(input);
             }
