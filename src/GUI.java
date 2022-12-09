@@ -101,7 +101,6 @@ public class GUI extends JFrame
                             Config.setPathToFolder(Backend.formatPathToFolder(chooser.getSelectedFile().getAbsolutePath(), chooser.getSelectedFile().getName()));
                             input = chooser.getSelectedFile().getAbsolutePath();
                         }
-                        case JFileChooser.CANCEL_OPTION -> input = ":goback";
                         case JFileChooser.ERROR_OPTION -> System.exit(1);
                         default -> input = ":goback";
                     }
