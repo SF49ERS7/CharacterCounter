@@ -58,21 +58,21 @@ public class Config
         if (args.length != 0)
             if (args[0].equals("--help") || args[0].equals("-h"))
                 CLI.displayHelp();
-            for (int i = 0; i < args.length; i++)
-                switch (args[i]) {
-                    case "--cmd", "--cli" -> forceCLI = true; //Whether to force a command-line interface
-                    case "--file" -> { //Whether to count input from a file
-                        if (args.length >= 2)
-                        {
-                            countFromFile = true;
-                            pathToFile = args[i + 1];
-                        }
-                        else
-                            CLI.invalidArgsError();
+        for (int i = 0; i < args.length; i++)
+            switch (args[i]) {
+                case "--cmd", "--cli" -> forceCLI = true; //Whether to force a command-line interface
+                case "--file" -> { //Whether to count input from a file
+                    if (args.length >= 2)
+                    {
+                        countFromFile = true;
+                        pathToFile = args[i + 1];
                     }
-                    case "--allvals" -> showEmptyVals = true; //Whether to show empty values in the output
-                    case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
-                    case "--noconfig", "--nocfg" -> showSettingsButton = false;
+                    else
+                        CLI.invalidArgsError();
+                }
+                case "--allvals" -> showEmptyVals = true; //Whether to show empty values in the output
+                case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
+                case "--noconfig", "--nocfg" -> showSettingsButton = false;
                 }
         if (GraphicsEnvironment.isHeadless() && !forceGUI)
             runUI = "CLI"; //Even if the command line doesn't specify, we don't want to throw an exception
