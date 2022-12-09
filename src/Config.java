@@ -49,6 +49,10 @@ public class Config
      */
     private static boolean showSettingsButton = true;
     /**
+     * Stores whether the legacy (pre-0.11.0) GUI should be shown.
+     */
+    private static boolean showLegacyGUI = false;
+    /**
      * Sets <code>enabledSettings</code> with the settings from the command-line.
      *
      * @param args The settings to apply.
@@ -72,6 +76,7 @@ public class Config
                 }
                 case "--allvals" -> showEmptyVals = true; //Whether to show empty values in the output
                 case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
+                case "--oldgui", "--legacygui" -> showLegacyGUI = true;
                 case "--noconfig", "--nocfg" -> showSettingsButton = false;
                 }
         if (GraphicsEnvironment.isHeadless() && !forceGUI)
@@ -209,5 +214,13 @@ public class Config
     public static void setShowEmptyVals(boolean showEmptyVals)
     {
         Config.showEmptyVals = showEmptyVals;
+    }
+    /**
+     * Getter for <code>showLegacyGUI</code>.
+     * @return <code>showLegacyGUI</code>.
+     */
+    public static boolean isShowLegacyGUI()
+    {
+        return showLegacyGUI;
     }
 }

@@ -17,9 +17,12 @@ public class Main
             else
                 CLI.hid();
         else
-            if (Config.isCountFromFile())
-                GUI.fileCounter();
+            if (Config.isShowLegacyGUI())
+                if (Config.isCountFromFile())
+                    GUI_Legacy.fileCounter();
+                else
+                    GUI_Legacy.main();
             else
-                GUI.main();
+                GUI.hid();
     }
 }
