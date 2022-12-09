@@ -1,274 +1,166 @@
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Scanner;
-
-import static java.util.Objects.requireNonNullElse;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
-import static javax.swing.JOptionPane.QUESTION_MESSAGE;
-import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
-import static javax.swing.JOptionPane.showInputDialog;
-import static javax.swing.JOptionPane.showMessageDialog;
 /**
- *  Contains all the <code>JOptionPane</code> calls in this program, making modularization easy.
+ * This is the new GUI for Character Counter, which is based on <code>JFrame</code>.
  */
-public class GUI implements UI
+public class GUI extends JFrame
 {
     /**
-     * Displays a dialog box with a text prompt, asking for an input.
-     * @return The input provided by the user.
+     * Constructor for the GUI.
      */
-    public static String displayHIDInput()
+    private GUI()
     {
-        String input = showInputDialog(null, "Enter the input to count\nAlternatively, type ':goback' to go back", "Input", QUESTION_MESSAGE);
-        return requireNonNullElse(input, ":goback");
+        super.setSize(854, 480);
+        super.setTitle("Character Counter");
+        super.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        drawUI();
+        super.setVisible(true);
     }
     /**
-     * Displays a dialog box by taking <code>numsOfChars</code>, and passing it to <code>outputMessage()</code>.
-     * @param numsOfChars An array with at least 29 rows that is ordered correctly.
+     * Builds the main panel.
      */
-    public static void displayOutput(long[] numsOfChars)
+    private void drawUI()
     {
-        showMessageDialog(null, Backend.outputMessage(numsOfChars), "Result", INFORMATION_MESSAGE);
-    }
-    /**
-     * Displays when the user fails to provide input.
-     */
-    public static void noInputError()
-    {
-        showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", ERROR_MESSAGE);
-    }
-    /**
-     * Displays when the user provides a file that does not contain text.
-     */
-    public static void invalidInputError()
-    {
-        showMessageDialog(null, "Error: File either contains no data, or is unreadable.", "Error", ERROR_MESSAGE);
-    }
-    /**
-     * Tests if the inputted data is empty.
-     * @param input The inputted data.
-     */
-    public static boolean testForNoData(String input)
-    {
-        if (input.length() == 0)
-        {
-            invalidInputError();
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Saves the counted output to a file
-     * @param numsOfChars The array of counted characters.
-     */
-    public static void saveOutputToFile(long[] numsOfChars)
-    {
-        JFrame frame = new JFrame("Input");
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Select where you wish to save the file output");
-        frame.setSize(1,1);
-        frame.setVisible(true);
-        frame.setVisible(false);
-        int returnVal = chooser.showSaveDialog(frame);
-        if (returnVal == JFileChooser.APPROVE_OPTION)
+        //MENU BAR//
+
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu file1 = new JMenu("File");
+        JMenuItem settings = new JMenuItem("Settings");
+        JMenuItem exit = new JMenuItem("Exit");
+        file1.add(settings);
+        file1.add(exit);
+
+        JMenu help = new JMenu("Help");
+        JMenuItem helpOnWeb = new JMenuItem("View Help");
+        JMenuItem about = new JMenuItem("About");
+        help.add(helpOnWeb);
+        help.add(about);
+
+        menuBar.add(file1);
+        menuBar.add(help);
+
+        super.add(menuBar, BorderLayout.NORTH);
+
+        //MAIN PANEL//
+        JPanel centerPanel = new JPanel();
+        BorderLayout borderLayout1 = new BorderLayout();
+        centerPanel.setLayout(borderLayout1);
+
+        //LABEL PANEL
+        JPanel labelPanel = new JPanel();
+        BorderLayout borderLayout2 = new BorderLayout();
+        labelPanel.setLayout(borderLayout2);
+        JLabel textPane = new JLabel("How would you like to count?", SwingConstants.CENTER);
+        labelPanel.add(textPane, BorderLayout.CENTER);
+        centerPanel.add(labelPanel, BorderLayout.NORTH);
+
+        //BUTTON PANEL//
+        JPanel buttonPanel = new JPanel();
+        GridLayout gridLayout = new GridLayout(1, 2);
+        buttonPanel.setLayout(gridLayout);
+        JButton countFromFile = new JButton("Count from file");
+        JButton countFromInput = new JButton("Count from input");
+        buttonPanel.add(countFromFile, 0);
+        buttonPanel.add(countFromInput, 1);
+        centerPanel.add(buttonPanel);
+
+        //ROOT//
+        super.add(centerPanel, BorderLayout.CENTER);
+
+        //LISTENERS//
+        settings.addActionListener(event -> GUI_Legacy.settingsUI());
+        exit.addActionListener(event -> System.exit(0));
+        about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion()));
+        helpOnWeb.addActionListener(event -> {
+            Desktop desktop = Desktop.getDesktop();
             try {
-                Backend.writeOutputToFile(numsOfChars, chooser.getSelectedFile().getAbsolutePath());
-            } catch (IOException e) {
-                showMessageDialog(null, "Error: Disk is write-protected");
+                desktop.browse(new URI("https://github.com/SF49ERS7/CharacterCounter/wiki"));
+            } catch (IOException | URISyntaxException e) {
+                JOptionPane.showMessageDialog(this, "Error: Could not find a browser", "Error", JOptionPane.ERROR_MESSAGE);
             }
-    }
-    /**
-     * Displays a <code>JFileChooser</code> prompt, asking for a file.
-     * @return The file path.
-     */
-    public static String fileInputFromGui()
-    {
-        JFrame frame = new JFrame("Input");
-        JFileChooser chooser = new JFileChooser(Config.getPathToFolder());
-        frame.setSize(1, 1);
-        frame.setVisible(true);
-        frame.setVisible(false);
-        chooser.setDialogTitle("Select the file to count from");
-        int returnVal = chooser.showOpenDialog(frame);
-        switch (returnVal) {
-            case JFileChooser.APPROVE_OPTION -> {
-                Config.setPathToFolder(Backend.formatPathToFolder(chooser.getSelectedFile().getAbsolutePath(), chooser.getSelectedFile().getName()));
-                return chooser.getSelectedFile().getAbsolutePath();
-            }
-            case JFileChooser.CANCEL_OPTION -> {
-                return ":goback";
-            }
-            case JFileChooser.ERROR_OPTION -> System.exit(1);
-        }
-        return ":quit";
-    }
-    /**
-     * Runs after counting of a file is completed.
-     */
-    public static void resetFileInputPath()
-    {
-        if (!Config.isCountFromFile())
-            Config.setPathToFile(null);
-        else
-            System.exit(0);
-    }
-    /**
-     * Displays when the user provides a file path that doesn't work.
-     */
-    public static void noFileError()
-    {
-        showMessageDialog(null, "Error: The file does not exist, or is invalid.", "Error", ERROR_MESSAGE);
-    }
-    /**
-     * Runs the initial GUI.
-     */
-    public static void main()
-    {
-        for (long i = 0L; i < Long.MAX_VALUE; i++)
-        {
-            Object[] options;
-            if (Config.isShowSettingsButton())
-                options = new Object[]{"From inputted text", "From a file","Settings", "Cancel"};
-            else
-                options = new Object[]{"From inputted text", "From a file", "Cancel"};
-            int n = JOptionPane.showOptionDialog(null, "Welcome to Character Counter, version " + Backend.getProgramVersion() + "\nHow would you like to count?", "Input", YES_NO_CANCEL_OPTION, QUESTION_MESSAGE, null, options, options[0]);
-            switch (n) {
-                case 0 -> hid();
-                case 1 -> fileCounter();
-                case 2 -> {
-                    if (Config.isShowSettingsButton())
-                        settingsUI();
-                    else
-                        System.exit(0);
+        });
+        countFromInput.addActionListener(event -> GUI_Legacy.hid());
+        countFromFile.addActionListener(event -> {
+            for (long i = 0; i < Long.MAX_VALUE; i++)
+            {
+                if (Config.getPathToFile() == null)
+                {
+                    String input = "";
+                    JFileChooser chooser = new JFileChooser(Config.getPathToFolder());
+                    chooser.setDialogTitle("Select the file to count from");
+                    int returnVal = chooser.showOpenDialog(this);
+                    switch (returnVal) {
+                        case JFileChooser.APPROVE_OPTION -> {
+                            Config.setPathToFolder(Backend.formatPathToFolder(chooser.getSelectedFile().getAbsolutePath(), chooser.getSelectedFile().getName()));
+                            input = chooser.getSelectedFile().getAbsolutePath();
+                        }
+                        case JFileChooser.CANCEL_OPTION -> input = ":goback";
+                        case JFileChooser.ERROR_OPTION -> System.exit(1);
+                        default -> input = ":goback";
+                    }
+
+                    switch (input)
+                    {
+                        case ":goback" -> {
+                            return;
+                        }
+                        case ":quit" -> System.exit(0);
+                        case "" -> {
+                            GUI_Legacy.noInputError();
+                            continue;
+                        }
+                    }
+                    Config.setPathToFile(input);
                 }
-                default -> System.exit(0);
+                File file = new File(Config.getPathToFile());
+                if (!file.exists())
+                {
+                    GUI_Legacy.noFileError();
+                    GUI_Legacy.resetFileInputPath();
+                    continue;
+                }
+                Scanner inputFile;
+                try {
+                    inputFile = new Scanner(file);
+                } catch (FileNotFoundException e) {
+                    GUI_Legacy.noFileError();
+                    GUI_Legacy.resetFileInputPath();
+                    continue;
+                }
+                StringBuilder dataIn1Line = new StringBuilder();
+
+                while (inputFile.hasNextLine())
+                    dataIn1Line.append(inputFile.nextLine());
+
+                String input = String.valueOf(dataIn1Line);
+
+                if (GUI_Legacy.testForNoData(input))
+                {
+                    GUI_Legacy.resetFileInputPath();
+                    continue;
+                }
+                long[] numsOfChars = Backend.charCounter(input);
+
+                GUI_Legacy.displayOutput(numsOfChars);
+                if (Config.isSendOutputToFile())
+                    GUI_Legacy.saveOutputToFile(numsOfChars);
+
+                GUI_Legacy.resetFileInputPath();
             }
-        }
+        });
     }
     /**
-     * Runs the GUI that counts from human input.
+     * Main method for <code>GUI</code>.
      */
     public static void hid()
     {
-        for (long i = 0L; i < Long.MAX_VALUE; i++)
-        {
-            String input = displayHIDInput();
-            String parsedData = Backend.parseData(input);
-
-            switch (parsedData) {
-                case "" -> {
-                    noInputError();
-                    continue;
-                }
-                case ":goback" -> {
-                    return;
-                }
-            }
-
-            long[] numsOfChars = Backend.charCounter(parsedData);
-
-            displayOutput(numsOfChars);
-            if (Config.isSendOutputToFile())
-                saveOutputToFile(numsOfChars);
-        }
-    }
-
-    /**
-     * Runs the GUI that counts from a file on disk.
-     */
-    public static void fileCounter()
-    {
-        for (long i = 0; i < Long.MAX_VALUE; i++)
-        {
-            if (Config.getPathToFile() == null)
-            {
-                String input = fileInputFromGui();
-                switch (input)
-                {
-                    case ":goback" -> {
-                        return;
-                    }
-                    case ":quit" -> System.exit(0);
-                    case "" -> {
-                        noInputError();
-                        continue;
-                    }
-                }
-                Config.setPathToFile(input);
-            }
-            File file = new File(Config.getPathToFile());
-            if (!file.exists())
-            {
-                noFileError();
-                resetFileInputPath();
-                continue;
-            }
-            Scanner inputFile;
-            try {
-                inputFile = new Scanner(file);
-            } catch (FileNotFoundException e) {
-                noFileError();
-                resetFileInputPath();
-                continue;
-            }
-            StringBuilder dataIn1Line = new StringBuilder();
-
-            while (inputFile.hasNextLine())
-                dataIn1Line.append(inputFile.nextLine());
-
-            String input = String.valueOf(dataIn1Line);
-
-            if (testForNoData(input))
-            {
-                resetFileInputPath();
-                continue;
-            }
-            long[] numsOfChars = Backend.charCounter(input);
-
-            displayOutput(numsOfChars);
-            if (Config.isSendOutputToFile())
-                saveOutputToFile(numsOfChars);
-
-            resetFileInputPath();
-        }
-    }
-    /**
-     * Runs the settings UI.
-     */
-    public static void settingsUI()
-    {
-        for (long i = 0; i < Long.MAX_VALUE; i++)
-        {
-            Object[] validSettings = new Object[]{"Show empty values", "Send output to a file", "Show total characters", "Count numbers individually"};
-            String settingToChange = String.valueOf(showInputDialog(null, "Select the setting you wish to change, or click Cancel if you are done.", "Input", QUESTION_MESSAGE, null, validSettings, validSettings[0]));
-            boolean whatSettingWasSetTo;
-            switch (settingToChange) {
-                case "Show empty values" -> {
-                    Config.setShowEmptyVals(!Config.isShowEmptyVals());
-                    whatSettingWasSetTo = Config.isShowEmptyVals();
-                }
-                case "Send output to a file" -> {
-                    Config.setSendOutputToFile(!Config.isSendOutputToFile());
-                    whatSettingWasSetTo = Config.isSendOutputToFile();
-                }
-                case "Show total characters" -> {
-                    Config.setShowTotal(!Config.isShowTotal());
-                    whatSettingWasSetTo = Config.isShowTotal();
-                }
-                case "Count numbers individually" -> {
-                    Config.setShowNumsIndependently(!Config.isShowNumsIndependently());
-                    whatSettingWasSetTo = Config.isShowNumsIndependently();
-                }
-                default -> {
-                    return;
-                }
-            }
-            showMessageDialog(null, settingToChange + " is now set to " + whatSettingWasSetTo + ".");
-        }
+        GUI gui = new GUI();
     }
 }
