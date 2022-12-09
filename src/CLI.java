@@ -7,7 +7,7 @@ import static java.lang.System.out;
 /**
  * The class for the command-line interface.
  */
-public class CLI implements UI
+public class CLI
 {
     /**
      * Defines the <code>Scanner</code> variable for this class.
