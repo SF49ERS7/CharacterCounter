@@ -32,8 +32,10 @@ public class GUI extends JFrame
         JMenuBar menuBar = new JMenuBar();
 
         JMenu file1 = new JMenu("File");
+        JMenuItem goToLegacyUI = new JMenuItem("Revert to legacy UI (unsupported)");
         JMenuItem settings = new JMenuItem("Settings");
         JMenuItem exit = new JMenuItem("Exit");
+        file1.add(goToLegacyUI);
         file1.add(settings);
         file1.add(exit);
 
@@ -75,6 +77,14 @@ public class GUI extends JFrame
         super.add(centerPanel, BorderLayout.CENTER);
 
         //LISTENERS//
+        goToLegacyUI.addActionListener(event -> {
+            int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to revert to the legacy GUI?\nIt is no longer supported, and it might be broken", "Confirm", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.OK_OPTION)
+            {
+                super.setVisible(false);
+                GUI_Legacy.main();
+            }
+        });
         settings.addActionListener(event -> GUI_Legacy.settingsUI());
         exit.addActionListener(event -> System.exit(0));
         about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion()));
@@ -84,6 +94,8 @@ public class GUI extends JFrame
                 desktop.browse(new URI("https://github.com/SF49ERS7/CharacterCounter/wiki"));
             } catch (IOException | URISyntaxException e) {
                 JOptionPane.showMessageDialog(this, "Error: Could not find a browser", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (UnsupportedOperationException e) {
+                JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         countFromInput.addActionListener(event -> GUI_Legacy.hid());
