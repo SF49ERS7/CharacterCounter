@@ -40,35 +40,34 @@ public class GUI extends JFrame
         //SHOW EMPTY VALUES
         JCheckBox showEmptyValues = new JCheckBox("Show empty values");
         showEmptyValues.setSelected(Config.isShowEmptyVals());
-        showEmptyValues.addActionListener(event2 -> Config.setShowEmptyVals(showEmptyValues.isSelected()));
         settings.add(showEmptyValues);
         //SEND OUTPUT TO A FILE
         JCheckBox sendOutputToAFile = new JCheckBox("Send the contents of the output to a file");
         sendOutputToAFile.setSelected(Config.isSendOutputToFile());
-        sendOutputToAFile.addActionListener(event2 -> Config.setSendOutputToFile(sendOutputToAFile.isSelected()));
         settings.add(sendOutputToAFile);
         //SHOW TOTAL CHARACTERS
         JCheckBox showTotalCharacters = new JCheckBox("Show total number of characters");
         showTotalCharacters.setSelected(Config.isShowTotal());
-        showTotalCharacters.addActionListener(event2 -> Config.setShowTotal(showTotalCharacters.isSelected()));
         settings.add(showTotalCharacters);
         //COUNT NUMBERS INDIVIDUALLY
         JCheckBox countNumbersIndividually = new JCheckBox("Count the numbers individually");
         countNumbersIndividually.setSelected(Config.isShowNumsIndependently());
-        countNumbersIndividually.addActionListener(event2 -> Config.setShowNumsIndependently(countNumbersIndividually.isSelected()));
         settings.add(countNumbersIndividually);
-
-        //HELP MENU//
-        JMenu help = new JMenu("Help");
-        JMenuItem helpOnWeb = new JMenuItem("View Help");
+        //UNSUPPORTED OPTIONS
         JMenu unsupportedOptions = new JMenu("Unsupported options");
         JMenuItem goToLegacyUI = new JMenuItem("Revert to legacy UI");
         JMenuItem advancedOptions = new JMenuItem("Advanced options");
         unsupportedOptions.add(goToLegacyUI);
         unsupportedOptions.add(advancedOptions);
+        settings.add(unsupportedOptions);
+
+        //HELP MENU//
+        JMenu help = new JMenu("Help");
+        JMenuItem helpOnWeb = new JMenuItem("View Help");
+        JMenuItem checkForUpdates = new JMenuItem("Check for updates...");
         JMenuItem about = new JMenuItem("About CharacterCounter...");
         help.add(helpOnWeb);
-        help.add(unsupportedOptions);
+        help.add(checkForUpdates);
         help.add(about);
 
         //ROOT//
@@ -104,6 +103,11 @@ public class GUI extends JFrame
         super.add(centerPanel, BorderLayout.CENTER);
 
         //LISTENERS//
+        exit.addActionListener(event -> System.exit(0));
+        showEmptyValues.addActionListener(event2 -> Config.setShowEmptyVals(showEmptyValues.isSelected()));
+        sendOutputToAFile.addActionListener(event2 -> Config.setSendOutputToFile(sendOutputToAFile.isSelected()));
+        showTotalCharacters.addActionListener(event2 -> Config.setShowTotal(showTotalCharacters.isSelected()));
+        countNumbersIndividually.addActionListener(event2 -> Config.setShowNumsIndependently(countNumbersIndividually.isSelected()));
         goToLegacyUI.addActionListener(event -> {
             int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to revert to the legacy GUI?\nIt is no longer supported, and it might be broken", "Confirm", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.OK_OPTION)
@@ -122,8 +126,6 @@ public class GUI extends JFrame
                 Config.applySettings(splitInput);
             }
         });
-        exit.addActionListener(event -> System.exit(0));
-        about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion()));
         helpOnWeb.addActionListener(event -> {
             Desktop desktop = Desktop.getDesktop();
             try {
@@ -134,6 +136,17 @@ public class GUI extends JFrame
                 JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+        checkForUpdates.addActionListener(event -> {
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI("https://github.com/SF49ERS7/CharacterCounter/releases"));
+            } catch (IOException | URISyntaxException e) {
+                JOptionPane.showMessageDialog(this, "Error: Could not find a browser", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (UnsupportedOperationException e) {
+                JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion()));
         countFromInput.addActionListener(event -> {
             //ROOT//
             JFrame inputCountingPanel = new JFrame("Input");
