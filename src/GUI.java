@@ -28,15 +28,14 @@ public class GUI extends JFrame
     private void drawUI()
     {
         //MENU BAR//
-
         JMenuBar menuBar = new JMenuBar();
 
+        //FILE MENU//
         JMenu file1 = new JMenu("File");
-        JMenuItem goToLegacyUI = new JMenuItem("Revert to legacy UI (unsupported)");
         JMenuItem exit = new JMenuItem("Exit");
-        file1.add(goToLegacyUI);
         file1.add(exit);
 
+        //SETTINGS MENU//
         JMenu settings = new JMenu("Settings");
         //SHOW EMPTY VALUES
         JCheckBox showEmptyValues = new JCheckBox("Show empty values");
@@ -59,16 +58,23 @@ public class GUI extends JFrame
         countNumbersIndividually.addActionListener(event2 -> Config.setShowNumsIndependently(countNumbersIndividually.isSelected()));
         settings.add(countNumbersIndividually);
 
+        //HELP MENU//
         JMenu help = new JMenu("Help");
         JMenuItem helpOnWeb = new JMenuItem("View Help");
+        JMenu unsupportedOptions = new JMenu("Unsupported options");
+        JMenuItem goToLegacyUI = new JMenuItem("Revert to legacy UI");
+        JMenuItem advancedOptions = new JMenuItem("Advanced options");
+        unsupportedOptions.add(goToLegacyUI);
+        unsupportedOptions.add(advancedOptions);
         JMenuItem about = new JMenuItem("About CharacterCounter...");
         help.add(helpOnWeb);
+        help.add(unsupportedOptions);
         help.add(about);
 
+        //ROOT//
         menuBar.add(file1);
         menuBar.add(settings);
         menuBar.add(help);
-
         super.add(menuBar, BorderLayout.NORTH);
 
         //MAIN PANEL//
@@ -105,6 +111,15 @@ public class GUI extends JFrame
                 super.setVisible(false);
                 Config.setRunUI("GUI_Legacy");
                 GUI_Legacy.main();
+            }
+        });
+        advancedOptions.addActionListener(event -> {
+            int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to use this menu?\nAny settings you change here are NOT supported and may break the program.\nAdditionally, there is no documentation provided.", "Confirm", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.OK_OPTION)
+            {
+                String input = JOptionPane.showInputDialog(this, "Enter your advanced options here", "Input", JOptionPane.QUESTION_MESSAGE);
+                String[] splitInput = input.split(" ");
+                Config.applySettings(splitInput);
             }
         });
         exit.addActionListener(event -> System.exit(0));
