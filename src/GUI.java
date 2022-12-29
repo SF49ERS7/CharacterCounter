@@ -33,19 +33,40 @@ public class GUI extends JFrame
 
         JMenu file1 = new JMenu("File");
         JMenuItem goToLegacyUI = new JMenuItem("Revert to legacy UI (unsupported)");
-        JMenuItem settings = new JMenuItem("Settings");
         JMenuItem exit = new JMenuItem("Exit");
         file1.add(goToLegacyUI);
-        file1.add(settings);
         file1.add(exit);
+
+        JMenu settings = new JMenu("Settings");
+        //SHOW EMPTY VALUES
+        JCheckBox showEmptyValues = new JCheckBox("Show empty values");
+        showEmptyValues.setSelected(Config.isShowEmptyVals());
+        showEmptyValues.addActionListener(event2 -> Config.setShowEmptyVals(showEmptyValues.isSelected()));
+        settings.add(showEmptyValues);
+        //SEND OUTPUT TO A FILE
+        JCheckBox sendOutputToAFile = new JCheckBox("Send the contents of the output to a file");
+        sendOutputToAFile.setSelected(Config.isSendOutputToFile());
+        sendOutputToAFile.addActionListener(event2 -> Config.setSendOutputToFile(sendOutputToAFile.isSelected()));
+        settings.add(sendOutputToAFile);
+        //SHOW TOTAL CHARACTERS
+        JCheckBox showTotalCharacters = new JCheckBox("Show total number of characters");
+        showTotalCharacters.setSelected(Config.isShowTotal());
+        showTotalCharacters.addActionListener(event2 -> Config.setShowTotal(showTotalCharacters.isSelected()));
+        settings.add(showTotalCharacters);
+        //COUNT NUMBERS INDIVIDUALLY
+        JCheckBox countNumbersIndividually = new JCheckBox("Count the numbers individually");
+        countNumbersIndividually.setSelected(Config.isShowNumsIndependently());
+        countNumbersIndividually.addActionListener(event2 -> Config.setShowNumsIndependently(countNumbersIndividually.isSelected()));
+        settings.add(countNumbersIndividually);
 
         JMenu help = new JMenu("Help");
         JMenuItem helpOnWeb = new JMenuItem("View Help");
-        JMenuItem about = new JMenuItem("About");
+        JMenuItem about = new JMenuItem("About CharacterCounter...");
         help.add(helpOnWeb);
         help.add(about);
 
         menuBar.add(file1);
+        menuBar.add(settings);
         menuBar.add(help);
 
         super.add(menuBar, BorderLayout.NORTH);
@@ -82,10 +103,10 @@ public class GUI extends JFrame
             if (result == JOptionPane.OK_OPTION)
             {
                 super.setVisible(false);
+                Config.setRunUI("GUI_Legacy");
                 GUI_Legacy.main();
             }
         });
-        settings.addActionListener(event -> GUI_Legacy.settingsUI());
         exit.addActionListener(event -> System.exit(0));
         about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion()));
         helpOnWeb.addActionListener(event -> {
@@ -98,44 +119,77 @@ public class GUI extends JFrame
                 JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-        countFromInput.addActionListener(event -> GUI_Legacy.hid());
-        countFromFile.addActionListener(event -> {
-            for (long i = 0; i < Long.MAX_VALUE; i++)
-            {
-                if (Config.getPathToFile() == null)
-                {
-                    String input = "";
-                    JFileChooser chooser = new JFileChooser(Config.getPathToFolder());
-                    chooser.setDialogTitle("Select the file to count from");
-                    int returnVal = chooser.showOpenDialog(this);
-                    switch (returnVal) {
-                        case JFileChooser.APPROVE_OPTION -> {
-                            Config.setPathToFolder(Backend.formatPathToFolder(chooser.getSelectedFile().getAbsolutePath(), chooser.getSelectedFile().getName()));
-                            input = chooser.getSelectedFile().getAbsolutePath();
-                        }
-                        case JFileChooser.ERROR_OPTION -> System.exit(1);
-                        default -> input = ":goback";
-                    }
+        countFromInput.addActionListener(event -> {
+            //ROOT//
+            JFrame inputCountingPanel = new JFrame("Input");
+            inputCountingPanel.setSize(854, 480);
 
-                    switch (input)
-                    {
-                        case ":goback" -> {
-                            return;
-                        }
-                        case ":quit" -> System.exit(0);
-                        case "" -> {
-                            GUI_Legacy.noInputError();
-                            continue;
-                        }
-                    }
-                    Config.setPathToFile(input);
+            //TEXT AREA//
+            JTextArea textArea = new JTextArea();
+            textArea.setLineWrap(true);
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            inputCountingPanel.add(scrollPane, BorderLayout.CENTER);
+
+            //MENU BAR//
+            JMenuBar menuBarCounting = new JMenuBar();
+            JButton count = new JButton("Count");
+            JButton exitButton = new JButton("Return");
+            count.addActionListener(event2 -> {
+                String parsedData = Backend.parseData(textArea.getText());
+
+                if (parsedData.equals(""))
+                {
+                    GUI_Legacy.noInputError();
+                    return;
                 }
+
+                long[] numsOfChars = Backend.charCounter(parsedData);
+
+                GUI_Legacy.displayOutput(numsOfChars);
+                if (Config.isSendOutputToFile())
+                    GUI_Legacy.saveOutputToFile(numsOfChars);
+                textArea.setText("");
+            });
+            exitButton.addActionListener(event2 -> inputCountingPanel.dispose());
+            menuBarCounting.add(count);
+            menuBarCounting.add(exitButton);
+            inputCountingPanel.add(menuBarCounting, BorderLayout.NORTH);
+
+            //END//
+            inputCountingPanel.setVisible(true);
+        });
+        countFromFile.addActionListener(event -> {
+            if (Config.getPathToFile() == null)
+            {
+                String input = "";
+                JFileChooser chooser = new JFileChooser(Config.getPathToFolder());
+                chooser.setDialogTitle("Select the file to count from");
+                int returnVal = chooser.showOpenDialog(this);
+                switch (returnVal) {
+                    case JFileChooser.APPROVE_OPTION -> {
+                        Config.setPathToFolder(Backend.formatPathToFolder(chooser.getSelectedFile().getAbsolutePath(), chooser.getSelectedFile().getName()));
+                        input = chooser.getSelectedFile().getAbsolutePath();
+                    }
+                    case JFileChooser.ERROR_OPTION -> System.exit(1);
+                    default -> input = ":goback";
+                }
+
+                switch (input)
+                {
+                    case ":goback" -> {
+                        return;
+                    }
+                    case ":quit" -> System.exit(0);
+                    case "" -> GUI_Legacy.noInputError();
+                }
+                Config.setPathToFile(input);
+            }
                 File file = new File(Config.getPathToFile());
                 if (!file.exists())
                 {
                     GUI_Legacy.noFileError();
                     GUI_Legacy.resetFileInputPath();
-                    continue;
+                    return;
                 }
                 Scanner inputFile;
                 try {
@@ -143,7 +197,7 @@ public class GUI extends JFrame
                 } catch (FileNotFoundException e) {
                     GUI_Legacy.noFileError();
                     GUI_Legacy.resetFileInputPath();
-                    continue;
+                    return;
                 }
                 StringBuilder dataIn1Line = new StringBuilder();
 
@@ -153,10 +207,7 @@ public class GUI extends JFrame
                 String input = String.valueOf(dataIn1Line);
 
                 if (GUI_Legacy.testForNoData(input))
-                {
                     GUI_Legacy.resetFileInputPath();
-                    continue;
-                }
                 long[] numsOfChars = Backend.charCounter(input);
 
                 GUI_Legacy.displayOutput(numsOfChars);
@@ -164,7 +215,6 @@ public class GUI extends JFrame
                     GUI_Legacy.saveOutputToFile(numsOfChars);
 
                 GUI_Legacy.resetFileInputPath();
-            }
         });
     }
     /**
