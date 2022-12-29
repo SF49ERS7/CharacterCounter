@@ -147,7 +147,7 @@ public class GUI extends JFrame
                 JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-        about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion()));
+        about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion(), "Version Information", JOptionPane.INFORMATION_MESSAGE));
         countFromInput.addActionListener(event -> {
             //ROOT//
             JFrame inputCountingPanel = new JFrame("Input");
