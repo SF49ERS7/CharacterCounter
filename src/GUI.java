@@ -20,6 +20,7 @@ public class GUI extends JFrame
         super.setTitle("Character Counter");
         super.setDefaultCloseOperation(EXIT_ON_CLOSE);
         drawUI();
+        super.setLocationRelativeTo(null);
         super.setVisible(true);
     }
     /**
@@ -151,6 +152,7 @@ public class GUI extends JFrame
             //ROOT//
             JFrame inputCountingPanel = new JFrame("Input");
             inputCountingPanel.setSize(854, 480);
+            inputCountingPanel.setLocationRelativeTo(null);
 
             //TEXT AREA//
             JTextArea textArea = new JTextArea();
