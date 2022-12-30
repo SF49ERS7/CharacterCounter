@@ -73,12 +73,8 @@ public class GUI extends JFrame
         settings.add(countNumbersIndividually);
         settings.addSeparator();
         //UNSUPPORTED OPTIONS
-        JMenu unsupportedOptions = new JMenu("Unsupported options");
-        JMenuItem goToLegacyUI = new JMenuItem("Revert to legacy UI");
-        JMenuItem advancedOptions = new JMenuItem("Advanced options");
-        unsupportedOptions.add(goToLegacyUI);
-        unsupportedOptions.add(advancedOptions);
-        settings.add(unsupportedOptions);
+        JMenuItem advancedOptions = new JMenuItem("Advanced options...");
+        settings.add(advancedOptions);
 
         //HELP MENU//
         JMenu help = new JMenu("Help");
@@ -127,20 +123,21 @@ public class GUI extends JFrame
         sendOutputToAFile.addActionListener(event2 -> Config.setSendOutputToFile(sendOutputToAFile.isSelected()));
         showTotalCharacters.addActionListener(event2 -> Config.setShowTotal(showTotalCharacters.isSelected()));
         countNumbersIndividually.addActionListener(event2 -> Config.setShowNumsIndependently(countNumbersIndividually.isSelected()));
-        goToLegacyUI.addActionListener(event -> {
-            int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to revert to the legacy GUI?\nIt is no longer supported, and it might be broken", "Confirm", JOptionPane.YES_NO_OPTION);
-            if (result == JOptionPane.OK_OPTION)
-            {
-                super.setVisible(false);
-                Config.setRunUI("GUI_Legacy");
-                GUI_Legacy.main();
-            }
-        });
         advancedOptions.addActionListener(event -> {
             int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to use this menu?\nAny settings you change here are NOT supported and may break the program.\nAdditionally, there is no documentation provided.", "Confirm", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.OK_OPTION)
             {
                 String input = JOptionPane.showInputDialog(this, "Enter your advanced options here", "Input", JOptionPane.QUESTION_MESSAGE);
+                if (input.equals("legacygui"))
+                {
+                    int result2 = JOptionPane.showConfirmDialog(this, "Are you sure you want to revert to the legacy GUI?\nIt is no longer supported, and it might be broken", "Confirm", JOptionPane.YES_NO_OPTION);
+                    if (result2 == JOptionPane.OK_OPTION)
+                    {
+                        super.setVisible(false);
+                        Config.setRunUI("GUI_Legacy");
+                        GUI_Legacy.main();
+                    }
+                }
                 String[] splitInput = input.split(" ");
                 Config.applySettings(splitInput);
             }
