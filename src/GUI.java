@@ -1,10 +1,27 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Scanner;
 /**
  * This is the new GUI for Character Counter, which is based on <code>JFrame</code>.
@@ -54,6 +71,7 @@ public class GUI extends JFrame
         JCheckBox countNumbersIndividually = new JCheckBox("Count the numbers individually");
         countNumbersIndividually.setSelected(Config.isShowNumsIndependently());
         settings.add(countNumbersIndividually);
+        settings.addSeparator();
         //UNSUPPORTED OPTIONS
         JMenu unsupportedOptions = new JMenu("Unsupported options");
         JMenuItem goToLegacyUI = new JMenuItem("Revert to legacy UI");
@@ -92,12 +110,12 @@ public class GUI extends JFrame
 
         //BUTTON PANEL//
         JPanel buttonPanel = new JPanel();
-        GridLayout gridLayout = new GridLayout(1, 2);
-        buttonPanel.setLayout(gridLayout);
         JButton countFromFile = new JButton("Count from file");
+        JButton countFromURL = new JButton("Count from URL");
         JButton countFromInput = new JButton("Count from input");
         buttonPanel.add(countFromFile, 0);
-        buttonPanel.add(countFromInput, 1);
+        buttonPanel.add(countFromURL, 1);
+        buttonPanel.add(countFromInput, 2);
         centerPanel.add(buttonPanel);
 
         //ROOT//
@@ -188,6 +206,38 @@ public class GUI extends JFrame
             //END//
             inputCountingPanel.setVisible(true);
         });
+        countFromURL.addActionListener(event -> {
+            String linkToCountFrom = JOptionPane.showInputDialog(this, "Enter the URL of the document to count", "Input", JOptionPane.QUESTION_MESSAGE);
+            if (linkToCountFrom == null)
+                return;
+            else if (linkToCountFrom.equals(""))
+            {
+                GUI_Legacy.noInputError();
+                return;
+            }
+            String input;
+            try {
+                StringBuilder pageContentsBuilder = new StringBuilder(0);
+                URL url = new URL(linkToCountFrom);
+                URLConnection urlConnection = url.openConnection();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+                for (String needle = bufferedReader.readLine(); needle != null; needle = bufferedReader.readLine())
+                    pageContentsBuilder.append(needle).append("\n");
+                bufferedReader.close();
+                input = pageContentsBuilder.toString();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error: The input was not a valid URL, or the URL contained no data", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            long[] numsOfChars = Backend.charCounter(input);
+
+            GUI_Legacy.displayOutput(numsOfChars);
+
+            if (Config.isSendOutputToFile())
+                GUI_Legacy.saveOutputToFile(numsOfChars);
+        });
         countFromFile.addActionListener(event -> {
             if (Config.getPathToFile() == null)
             {
@@ -214,37 +264,37 @@ public class GUI extends JFrame
                 }
                 Config.setPathToFile(input);
             }
-                File file = new File(Config.getPathToFile());
-                if (!file.exists())
-                {
-                    GUI_Legacy.noFileError();
-                    GUI_Legacy.resetFileInputPath();
-                    return;
-                }
-                Scanner inputFile;
-                try {
-                    inputFile = new Scanner(file);
-                } catch (FileNotFoundException e) {
-                    GUI_Legacy.noFileError();
-                    GUI_Legacy.resetFileInputPath();
-                    return;
-                }
-                StringBuilder dataIn1Line = new StringBuilder();
-
-                while (inputFile.hasNextLine())
-                    dataIn1Line.append(inputFile.nextLine());
-
-                String input = String.valueOf(dataIn1Line);
-
-                if (GUI_Legacy.testForNoData(input))
-                    GUI_Legacy.resetFileInputPath();
-                long[] numsOfChars = Backend.charCounter(input);
-
-                GUI_Legacy.displayOutput(numsOfChars);
-                if (Config.isSendOutputToFile())
-                    GUI_Legacy.saveOutputToFile(numsOfChars);
-
+            File file = new File(Config.getPathToFile());
+            if (!file.exists())
+            {
+                GUI_Legacy.noFileError();
                 GUI_Legacy.resetFileInputPath();
+                return;
+            }
+            Scanner inputFile;
+            try {
+                inputFile = new Scanner(file);
+            } catch (FileNotFoundException e) {
+                GUI_Legacy.noFileError();
+                GUI_Legacy.resetFileInputPath();
+                return;
+            }
+            StringBuilder dataIn1Line = new StringBuilder();
+
+            while (inputFile.hasNextLine())
+                dataIn1Line.append(inputFile.nextLine());
+
+            String input = String.valueOf(dataIn1Line);
+
+            if (GUI_Legacy.testForNoData(input))
+                GUI_Legacy.resetFileInputPath();
+            long[] numsOfChars = Backend.charCounter(input);
+
+            GUI_Legacy.displayOutput(numsOfChars);
+            if (Config.isSendOutputToFile())
+                GUI_Legacy.saveOutputToFile(numsOfChars);
+
+            GUI_Legacy.resetFileInputPath();
         });
     }
     /**
