@@ -1,7 +1,6 @@
 /out/
 /.idea/
-/Character Counter.iml
+/CharacterCounter.iml
 /TODO.md
 /input.txt
 /output.txt
-.DS_Store
