@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Scanner;
+
+import static javax.swing.JOptionPane.*;
+
 /**
  * This is the new GUI for Character Counter, which is based on <code>JFrame</code>.
  */
@@ -197,15 +200,15 @@ public class GUI extends JFrame
 
                 if (parsedData.equals(""))
                 {
-                    GUI_Legacy.noInputError();
+                    noInputError();
                     return;
                 }
 
                 long[] numsOfChars = Backend.charCounter(parsedData);
 
-                GUI_Legacy.displayOutput(numsOfChars);
+                displayOutput(numsOfChars);
                 if (Config.isSendOutputToFile())
-                    GUI_Legacy.saveOutputToFile(numsOfChars);
+                    saveOutputToFile(numsOfChars);
                 textArea.setText("");
             });
             exitButton.addActionListener(event2 -> inputCountingPanel.dispose());
@@ -222,7 +225,7 @@ public class GUI extends JFrame
                 return;
             else if (linkToCountFrom.equals(""))
             {
-                GUI_Legacy.noInputError();
+                noInputError();
                 return;
             }
             String input;
@@ -234,10 +237,10 @@ public class GUI extends JFrame
             }
             long[] numsOfChars = Backend.charCounter(input);
 
-            GUI_Legacy.displayOutput(numsOfChars);
+            displayOutput(numsOfChars);
 
             if (Config.isSendOutputToFile())
-                GUI_Legacy.saveOutputToFile(numsOfChars);
+                saveOutputToFile(numsOfChars);
         });
         countFromFile.addActionListener(event -> {
             if (Config.getPathToFile() == null)
@@ -261,23 +264,23 @@ public class GUI extends JFrame
                         return;
                     }
                     case ":quit" -> System.exit(0);
-                    case "" -> GUI_Legacy.noInputError();
+                    case "" -> noInputError();
                 }
                 Config.setPathToFile(input);
             }
             File file = new File(Config.getPathToFile());
             if (!file.exists())
             {
-                GUI_Legacy.noFileError();
-                GUI_Legacy.resetFileInputPath();
+                noFileError();
+                resetFileInputPath();
                 return;
             }
             Scanner inputFile;
             try {
                 inputFile = new Scanner(file);
             } catch (FileNotFoundException e) {
-                GUI_Legacy.noFileError();
-                GUI_Legacy.resetFileInputPath();
+                noFileError();
+                resetFileInputPath();
                 return;
             }
             StringBuilder dataIn1Line = new StringBuilder();
@@ -287,15 +290,17 @@ public class GUI extends JFrame
 
             String input = String.valueOf(dataIn1Line);
 
-            if (GUI_Legacy.testForNoData(input))
-                GUI_Legacy.resetFileInputPath();
+            if (testForNoData(input)) {
+                resetFileInputPath();
+                return;
+            }
             long[] numsOfChars = Backend.charCounter(input);
 
-            GUI_Legacy.displayOutput(numsOfChars);
+            displayOutput(numsOfChars);
             if (Config.isSendOutputToFile())
-                GUI_Legacy.saveOutputToFile(numsOfChars);
+                saveOutputToFile(numsOfChars);
 
-            GUI_Legacy.resetFileInputPath();
+            resetFileInputPath();
         });
     }
     /**
@@ -304,5 +309,73 @@ public class GUI extends JFrame
     public static void hid()
     {
         GUI gui = new GUI();
+    }
+    /**
+     * Displays a dialog box by taking <code>numsOfChars</code>, and passing it to <code>outputMessage()</code>.
+     * @param numsOfChars An array with at least 29 rows that is ordered correctly.
+     */
+    public static void displayOutput(long[] numsOfChars)
+    {
+        JOptionPane.showMessageDialog(null, Backend.outputMessage(numsOfChars), "Result", INFORMATION_MESSAGE);
+    }
+    /**
+     * Displays when the user fails to provide input.
+     */
+    public static void noInputError()
+    {
+        showMessageDialog(null, "Error: You gave no input\nPlease give an input and try again", "Error", ERROR_MESSAGE);
+    }
+    /**
+     * Displays when the user provides a file that does not contain text.
+     */
+    public static void invalidInputError()
+    {
+        showMessageDialog(null, "Error: File either contains no data, or is unreadable.", "Error", ERROR_MESSAGE);
+    }
+    /**
+     * Tests if the inputted data is empty.
+     * @param input The inputted data.
+     */
+    private static boolean testForNoData(String input)
+    {
+        if (input.length() == 0)
+        {
+            invalidInputError();
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Saves the counted output to a file
+     * @param numsOfChars The array of counted characters.
+     */
+    private void saveOutputToFile(long[] numsOfChars)
+    {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select where you wish to save the file output");
+        int returnVal = chooser.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+            try {
+                Backend.writeOutputToFile(numsOfChars, chooser.getSelectedFile().getAbsolutePath());
+            } catch (IOException e) {
+                showMessageDialog(this, "Error: Disk is write-protected");
+            }
+    }
+    /**
+     * Displays when the user provides a file path that doesn't work.
+     */
+    private void noFileError()
+    {
+        showMessageDialog(this, "Error: The file does not exist, or is invalid.", "Error", ERROR_MESSAGE);
+    }
+    /**
+     * Runs after counting of a file is completed.
+     */
+    private void resetFileInputPath()
+    {
+        if (!Config.isCountFromFile())
+            Config.setPathToFile(null);
+        else
+            System.exit(0);
     }
 }
