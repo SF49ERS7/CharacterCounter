@@ -53,6 +53,10 @@ public class Config
      */
     private static boolean showLegacyGUI = false;
     /**
+     * Stores whether to count from a file on the web instead of on disk.
+     */
+    private static boolean countFromURL = false;
+    /**
      * Sets <code>enabledSettings</code> with the settings from the command-line.
      *
      * @param args The settings to apply.
@@ -74,6 +78,7 @@ public class Config
                     else
                         CLI.invalidArgsError();
                 }
+                case "--url", "--link" -> countFromURL = true;
                 case "--allvals" -> showEmptyVals = true; //Whether to show empty values in the output
                 case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
                 case "--oldgui", "--legacygui" -> showLegacyGUI = true;
@@ -222,5 +227,21 @@ public class Config
     public static boolean isShowLegacyGUI()
     {
         return showLegacyGUI;
+    }
+
+    /**
+     * Getter for <code>countFromURL</code>.
+     * @return <code>countFromURL</code>.
+     */
+    public static boolean isCountFromURL()
+    {
+        return countFromURL;
+    }
+    /**
+     * Setter for <code>countFromURL</code>.
+     */
+    public static void setCountFromURL(boolean countFromURL)
+    {
+        Config.countFromURL = countFromURL;
     }
 }

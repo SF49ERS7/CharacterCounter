@@ -1,9 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
-import static java.lang.System.exit;
-import static java.lang.System.out;
+import static java.lang.System.*;
+
 /**
  * The class for the command-line interface.
  */
@@ -41,6 +42,7 @@ public class CLI
         out.println("\t--file \"/path/to/file.txt\"\tCounts the characters from a file rather than from your input.\n");
         out.println("\t--cmd, --cli\t\t\tForce the command-line to run. Recommended if using these commands.\n");
         out.println("\t--gui, --ui\t\t\tForce the GUI to run. WARNING: The program will crash if you do this in a headless environment.\n");
+        out.println("\t--url, --link\t\t\tCount from a URL on the web.\n");
         exit(0);
     }
     /**
@@ -100,6 +102,28 @@ public class CLI
         }
 
         long[] numsOfChars = Backend.charCounter(data);
+
+        displayOutput(numsOfChars);
+    }
+    public static void urlCounter()
+    {
+        out.println("Welcome to Character Counter version " + Backend.getProgramVersion());
+        out.println("Enter the URL you wish to count from");
+        String linkToCountFrom = keyboard.nextLine();
+        if (linkToCountFrom == null || linkToCountFrom.equals(""))
+        {
+            noFileError();
+            return;
+        }
+
+        String input;
+        try {
+            input = Backend.getInputFromURL(linkToCountFrom);
+        } catch (IOException e) {
+            noFileError();
+            return;
+        }
+        long[] numsOfChars = Backend.charCounter(input);
 
         displayOutput(numsOfChars);
     }
