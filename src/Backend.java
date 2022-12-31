@@ -1,5 +1,9 @@
+import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -195,5 +199,24 @@ public class Backend
         fw.write("#Generated on " + formatter.format(date) + "\n\n");
         fw.write(outputMessage(numsOfChars));
         fw.close();
+    }
+    /**
+     * This method make a concatenated <code>String</code> that contains the entire file to count from.
+     * @param link The URL to concatenate from.
+     * @return The concatenated <code>String</code>.
+     * @throws IOException If the URL doesn't work.
+     */
+    public static String getInputFromURL(String link) throws IOException
+    {
+        StringBuilder pageContentsBuilder = new StringBuilder(0);
+        URL url = new URL(link);
+        URLConnection urlConnection = url.openConnection();
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+        for (String needle = bufferedReader.readLine(); needle != null; needle = bufferedReader.readLine())
+            pageContentsBuilder.append(needle).append("\n");
+        bufferedReader.close();
+        return pageContentsBuilder.toString();
     }
 }

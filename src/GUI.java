@@ -1,27 +1,10 @@
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import java.awt.Desktop;
-import java.io.BufferedReader;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Scanner;
 /**
  * This is the new GUI for Character Counter, which is based on <code>JFrame</code>.
@@ -214,16 +197,7 @@ public class GUI extends JFrame
             }
             String input;
             try {
-                StringBuilder pageContentsBuilder = new StringBuilder(0);
-                URL url = new URL(linkToCountFrom);
-                URLConnection urlConnection = url.openConnection();
-
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-                for (String needle = bufferedReader.readLine(); needle != null; needle = bufferedReader.readLine())
-                    pageContentsBuilder.append(needle).append("\n");
-                bufferedReader.close();
-                input = pageContentsBuilder.toString();
+                input = Backend.getInputFromURL(linkToCountFrom);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error: The input was not a valid URL, or the URL contained no data", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
