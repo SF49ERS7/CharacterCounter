@@ -127,22 +127,52 @@ public class GUI extends JFrame
         });
         helpOnWeb.addActionListener(event -> {
             Desktop desktop = Desktop.getDesktop();
+            URI uri;
             try {
-                desktop.browse(new URI("https://github.com/SF49ERS7/CharacterCounter/wiki"));
-            } catch (IOException | URISyntaxException e) {
-                JOptionPane.showMessageDialog(this, "Error: Could not find a browser", "Error", JOptionPane.ERROR_MESSAGE);
+                uri = new URI("https://github.com/SF49ERS7/CharacterCounter/wiki");
+            } catch (URISyntaxException e) {
+                return;
+            }
+            try {
+                desktop.browse(uri);
             } catch (UnsupportedOperationException e) {
-                JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
+                try {
+                    Process process = Runtime.getRuntime().exec(new String[] {
+                            "xdg-open", uri.toString()
+                    });
+                    process.waitFor();
+                    process.destroy();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (InterruptedException ignored) {
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error: Could not find a browser", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         checkForUpdates.addActionListener(event -> {
             Desktop desktop = Desktop.getDesktop();
+            URI uri;
             try {
-                desktop.browse(new URI("https://github.com/SF49ERS7/CharacterCounter/releases"));
-            } catch (IOException | URISyntaxException e) {
-                JOptionPane.showMessageDialog(this, "Error: Could not find a browser", "Error", JOptionPane.ERROR_MESSAGE);
+                uri = new URI("https://github.com/SF49ERS7/CharacterCounter/releases");
+            } catch (URISyntaxException e) {
+                return;
+            }
+            try {
+                desktop.browse(uri);
             } catch (UnsupportedOperationException e) {
-                JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
+                try {
+                    Process process = Runtime.getRuntime().exec(new String[] {
+                            "xdg-open", uri.toString()
+                    });
+                    process.waitFor();
+                    process.destroy();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Error: Your OS doesn't support opening links", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (InterruptedException ignored) {
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error: Could not find a browser", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion(), "Version Information", JOptionPane.INFORMATION_MESSAGE));
