@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import static javax.swing.JOptionPane.*;
  */
 public class GUI extends JFrame
 {
+    public static JPopupMenu popupMenu = new JPopupMenu();
     /**
      * Constructor for the GUI.
      */
@@ -93,8 +95,11 @@ public class GUI extends JFrame
         //BUTTON PANEL//
         JPanel buttonPanel = new JPanel();
         JButton countFromFile = new JButton("Count from file");
+        countFromFile.setToolTipText("Click this button to count characters from a file on your hard drive");
         JButton countFromURL = new JButton("Count from URL");
+        countFromURL.setToolTipText("Click this button and enter a URL to count characters from a file on the web.");
         JButton countFromInput = new JButton("Count from input");
+        countFromInput.setToolTipText("Click this button to open a text box to type into to count from.");
         buttonPanel.add(countFromFile, 0);
         buttonPanel.add(countFromURL, 1);
         buttonPanel.add(countFromInput, 2);
@@ -187,14 +192,34 @@ public class GUI extends JFrame
 
             //TEXT AREA//
             JTextArea textArea = new JTextArea();
+
             textArea.setLineWrap(true);
             JScrollPane scrollPane = new JScrollPane(textArea);
             inputCountingPanel.add(scrollPane, BorderLayout.CENTER);
 
+            //RIGHT CLICK MENU//
+            JMenuItem cut = new JMenuItem("Cut");
+            cut.addActionListener(event2 -> textArea.cut());
+            popupMenu.add(cut);
+            JMenuItem copy = new JMenuItem("Copy");
+            popupMenu.add(copy);
+            copy.addActionListener(event2 -> textArea.copy());
+            JMenuItem paste = new JMenuItem("Paste");
+            paste.addActionListener(event2 -> textArea.paste());
+            popupMenu.add(paste);
+            popupMenu.addSeparator();
+            JMenuItem selectAll = new JMenuItem("Select All");
+            selectAll.addActionListener(event2 -> textArea.selectAll());
+            popupMenu.add(selectAll);
+            MouseListener popupListener = new RightClickListener();
+            textArea.addMouseListener(popupListener);
+
             //MENU BAR//
             JMenuBar menuBarCounting = new JMenuBar();
             JButton count = new JButton("Count");
+            count.setToolTipText("Click this button when you are finished typing.");
             JButton exitButton = new JButton("Return");
+            exitButton.setToolTipText("Click this button to go back to the main menu.");
             count.addActionListener(event2 -> {
                 String parsedData = Backend.parseData(textArea.getText());
 
