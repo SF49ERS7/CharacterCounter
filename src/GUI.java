@@ -38,7 +38,17 @@ public class GUI extends JFrame
 
         //FILE MENU//
         JMenu file1 = new JMenu("File");
+        JMenuItem countFromFileMenu = new JMenuItem("Count from file...");
+        countFromFileMenu.addActionListener(event1 -> countFromFile());
+        JMenuItem countFromURLMenu = new JMenuItem("Count from URL...");
+        countFromURLMenu.addActionListener(event1 -> countFromURL());
+        JMenuItem countFromInputMenu = new JMenuItem("Count from Input...");
+        countFromInputMenu.addActionListener(event1 -> countFromInput());
         JMenuItem exit = new JMenuItem("Exit");
+        file1.add(countFromFileMenu);
+        file1.add(countFromURLMenu);
+        file1.add(countFromInputMenu);
+        file1.addSeparator();
         file1.add(exit);
 
         //SETTINGS MENU//
@@ -94,11 +104,11 @@ public class GUI extends JFrame
 
         //BUTTON PANEL//
         JPanel buttonPanel = new JPanel();
-        JButton countFromFile = new JButton("Count from file");
+        JButton countFromFile = new JButton("File");
         countFromFile.setToolTipText("Click this button to count characters from a file on your hard drive");
-        JButton countFromURL = new JButton("Count from URL");
+        JButton countFromURL = new JButton("URL");
         countFromURL.setToolTipText("Click this button and enter a URL to count characters from a file on the web.");
-        JButton countFromInput = new JButton("Count from input");
+        JButton countFromInput = new JButton("Text input");
         countFromInput.setToolTipText("Click this button to open a text box to type into to count from.");
         buttonPanel.add(countFromFile, 0);
         buttonPanel.add(countFromURL, 1);
@@ -184,153 +194,9 @@ public class GUI extends JFrame
             }
         });
         about.addActionListener(event -> JOptionPane.showMessageDialog(this, "Character Counter, by SF49ERS7\nVersion " + Backend.getProgramVersion(), "Version Information", JOptionPane.INFORMATION_MESSAGE));
-        countFromInput.addActionListener(event -> {
-            //ROOT//
-            JFrame inputCountingPanel = new JFrame("Input");
-            inputCountingPanel.setSize(854, 480);
-            inputCountingPanel.setLocationRelativeTo(null);
-
-            //TEXT AREA//
-            JTextArea textArea = new JTextArea();
-
-            textArea.setLineWrap(true);
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            inputCountingPanel.add(scrollPane, BorderLayout.CENTER);
-
-            //RIGHT CLICK MENU//
-            popupMenu = new JPopupMenu();
-            JMenuItem cut = new JMenuItem("Cut");
-            cut.addActionListener(event2 -> textArea.cut());
-            popupMenu.add(cut);
-            JMenuItem copy = new JMenuItem("Copy");
-            popupMenu.add(copy);
-            copy.addActionListener(event2 -> textArea.copy());
-            JMenuItem paste = new JMenuItem("Paste");
-            paste.addActionListener(event2 -> textArea.paste());
-            popupMenu.add(paste);
-            popupMenu.addSeparator();
-            JMenuItem selectAll = new JMenuItem("Select All");
-            selectAll.addActionListener(event2 -> textArea.selectAll());
-            popupMenu.add(selectAll);
-            MouseListener popupListener = new RightClickListener();
-            textArea.addMouseListener(popupListener);
-
-            //MENU BAR//
-            JMenuBar menuBarCounting = new JMenuBar();
-            JButton count = new JButton("Count");
-            count.setToolTipText("Click this button when you are finished typing.");
-            JButton exitButton = new JButton("Return");
-            exitButton.setToolTipText("Click this button to go back to the main menu.");
-            count.addActionListener(event2 -> {
-                String parsedData = Backend.parseData(textArea.getText());
-
-                if (parsedData.equals(""))
-                {
-                    noInputError();
-                    return;
-                }
-
-                long[] numsOfChars = Backend.charCounter(parsedData);
-
-                displayOutput(numsOfChars);
-                if (Config.isSendOutputToFile())
-                    saveOutputToFile(numsOfChars);
-                textArea.setText("");
-            });
-            exitButton.addActionListener(event2 -> {
-                popupMenu.setEnabled(false);
-                inputCountingPanel.dispose();
-            });
-            menuBarCounting.add(count);
-            menuBarCounting.add(exitButton);
-            inputCountingPanel.add(menuBarCounting, BorderLayout.NORTH);
-
-            //END//
-            inputCountingPanel.setVisible(true);
-        });
-        countFromURL.addActionListener(event -> {
-            String linkToCountFrom = JOptionPane.showInputDialog(this, "Enter the URL of the document to count", "Input", JOptionPane.QUESTION_MESSAGE);
-            if (linkToCountFrom == null)
-                return;
-            else if (linkToCountFrom.equals(""))
-            {
-                noInputError();
-                return;
-            }
-            String input;
-            try {
-                input = Backend.getInputFromURL(linkToCountFrom);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error: The input was not a valid URL, or the URL contained no data", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            long[] numsOfChars = Backend.charCounter(input);
-
-            displayOutput(numsOfChars);
-
-            if (Config.isSendOutputToFile())
-                saveOutputToFile(numsOfChars);
-        });
-        countFromFile.addActionListener(event -> {
-            if (Config.getPathToFile() == null)
-            {
-                String input = "";
-                JFileChooser chooser = new JFileChooser(Config.getPathToFolder());
-                chooser.setDialogTitle("Select the file to count from");
-                int returnVal = chooser.showOpenDialog(this);
-                switch (returnVal) {
-                    case JFileChooser.APPROVE_OPTION -> {
-                        Config.setPathToFolder(Backend.formatPathToFolder(chooser.getSelectedFile().getAbsolutePath(), chooser.getSelectedFile().getName()));
-                        input = chooser.getSelectedFile().getAbsolutePath();
-                    }
-                    case JFileChooser.ERROR_OPTION -> System.exit(1);
-                    default -> input = ":goback";
-                }
-
-                switch (input)
-                {
-                    case ":goback" -> {
-                        return;
-                    }
-                    case ":quit" -> System.exit(0);
-                    case "" -> noInputError();
-                }
-                Config.setPathToFile(input);
-            }
-            File file = new File(Config.getPathToFile());
-            if (!file.exists())
-            {
-                noFileError();
-                resetFileInputPath();
-                return;
-            }
-            Scanner inputFile;
-            try {
-                inputFile = new Scanner(file);
-            } catch (FileNotFoundException e) {
-                noFileError();
-                resetFileInputPath();
-                return;
-            }
-            StringBuilder dataIn1Line = new StringBuilder();
-
-            while (inputFile.hasNextLine())
-                dataIn1Line.append(inputFile.nextLine());
-
-            String input = String.valueOf(dataIn1Line);
-
-            if (testForNoData(input)) {
-                resetFileInputPath();
-                return;
-            }
-            long[] numsOfChars = Backend.charCounter(input);
-
-            displayOutput(numsOfChars);
-            if (Config.isSendOutputToFile())
-                saveOutputToFile(numsOfChars);
-
-            resetFileInputPath();
-        });
+        countFromInput.addActionListener(event -> countFromInput());
+        countFromURL.addActionListener(event -> countFromURL());
+        countFromFile.addActionListener(event -> countFromFile());
     }
     /**
      * Main method for <code>GUI</code>.
@@ -406,5 +272,165 @@ public class GUI extends JFrame
             Config.setPathToFile(null);
         else
             System.exit(0);
+    }
+    /**
+     * Counts from a text editor-like interface.
+     */
+    public void countFromInput()
+    {
+        //ROOT//
+        JFrame inputCountingPanel = new JFrame("Input");
+        inputCountingPanel.setSize(854, 480);
+        inputCountingPanel.setLocationRelativeTo(null);
+
+        //TEXT AREA//
+        JTextArea textArea = new JTextArea();
+
+        textArea.setLineWrap(true);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        inputCountingPanel.add(scrollPane, BorderLayout.CENTER);
+
+        //RIGHT CLICK MENU//
+        popupMenu = new JPopupMenu();
+        JMenuItem cut = new JMenuItem("Cut");
+        cut.addActionListener(event2 -> textArea.cut());
+        popupMenu.add(cut);
+        JMenuItem copy = new JMenuItem("Copy");
+        popupMenu.add(copy);
+        copy.addActionListener(event2 -> textArea.copy());
+        JMenuItem paste = new JMenuItem("Paste");
+        paste.addActionListener(event2 -> textArea.paste());
+        popupMenu.add(paste);
+        popupMenu.addSeparator();
+        JMenuItem selectAll = new JMenuItem("Select All");
+        selectAll.addActionListener(event2 -> textArea.selectAll());
+        popupMenu.add(selectAll);
+        MouseListener popupListener = new RightClickListener();
+        textArea.addMouseListener(popupListener);
+
+        //MENU BAR//
+        JMenuBar menuBarCounting = new JMenuBar();
+        JButton count = new JButton("Count");
+        count.setToolTipText("Click this button when you are finished typing.");
+        JButton exitButton = new JButton("Return");
+        exitButton.setToolTipText("Click this button to go back to the main menu.");
+        count.addActionListener(event2 -> {
+            String parsedData = Backend.parseData(textArea.getText());
+
+            if (parsedData.equals(""))
+            {
+                noInputError();
+                return;
+            }
+
+            long[] numsOfChars = Backend.charCounter(parsedData);
+
+            displayOutput(numsOfChars);
+            if (Config.isSendOutputToFile())
+                saveOutputToFile(numsOfChars);
+            textArea.setText("");
+        });
+        exitButton.addActionListener(event2 -> {
+            popupMenu.setEnabled(false);
+            inputCountingPanel.dispose();
+        });
+        menuBarCounting.add(count);
+        menuBarCounting.add(exitButton);
+        inputCountingPanel.add(menuBarCounting, BorderLayout.NORTH);
+
+        //END//
+        inputCountingPanel.setVisible(true);
+    }
+    /**
+     * Counts from a URL on the web, specified in a <code>JOptionPane</code> dialog box.
+     */
+    public void countFromURL()
+    {
+        String linkToCountFrom = JOptionPane.showInputDialog(this, "Enter the URL of the document to count", "Input", JOptionPane.QUESTION_MESSAGE);
+        if (linkToCountFrom == null)
+            return;
+        else if (linkToCountFrom.equals(""))
+        {
+            noInputError();
+            return;
+        }
+        String input;
+        try {
+            input = Backend.getInputFromURL(linkToCountFrom);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error: The input was not a valid URL, or the URL contained no data", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        long[] numsOfChars = Backend.charCounter(input);
+
+        displayOutput(numsOfChars);
+
+        if (Config.isSendOutputToFile())
+            saveOutputToFile(numsOfChars);
+    }
+
+    /**
+     * Counts from a file on disk using <code>JFileChooser</code>.
+     */
+    public void countFromFile()
+    {
+        if (Config.getPathToFile() == null)
+        {
+            String input = "";
+            JFileChooser chooser = new JFileChooser(Config.getPathToFolder());
+            chooser.setDialogTitle("Select the file to count from");
+            int returnVal = chooser.showOpenDialog(this);
+            switch (returnVal) {
+                case JFileChooser.APPROVE_OPTION -> {
+                    Config.setPathToFolder(Backend.formatPathToFolder(chooser.getSelectedFile().getAbsolutePath(), chooser.getSelectedFile().getName()));
+                    input = chooser.getSelectedFile().getAbsolutePath();
+                }
+                case JFileChooser.ERROR_OPTION -> System.exit(1);
+                default -> input = ":goback";
+            }
+
+            switch (input)
+            {
+                case ":goback" -> {
+                    return;
+                }
+                case ":quit" -> System.exit(0);
+                case "" -> noInputError();
+            }
+            Config.setPathToFile(input);
+        }
+        File file = new File(Config.getPathToFile());
+        if (!file.exists())
+        {
+            noFileError();
+            resetFileInputPath();
+            return;
+        }
+        Scanner inputFile;
+        try {
+            inputFile = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            noFileError();
+            resetFileInputPath();
+            return;
+        }
+        StringBuilder dataIn1Line = new StringBuilder();
+
+        while (inputFile.hasNextLine())
+            dataIn1Line.append(inputFile.nextLine());
+
+        String input = String.valueOf(dataIn1Line);
+
+        if (testForNoData(input)) {
+            resetFileInputPath();
+            return;
+        }
+        long[] numsOfChars = Backend.charCounter(input);
+
+        displayOutput(numsOfChars);
+        if (Config.isSendOutputToFile())
+            saveOutputToFile(numsOfChars);
+
+        resetFileInputPath();
     }
 }
