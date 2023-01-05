@@ -15,7 +15,7 @@ import static javax.swing.JOptionPane.*;
  */
 public class GUI extends JFrame
 {
-    public static JPopupMenu popupMenu = new JPopupMenu();
+    public static JPopupMenu popupMenu;
     /**
      * Constructor for the GUI.
      */
@@ -198,6 +198,7 @@ public class GUI extends JFrame
             inputCountingPanel.add(scrollPane, BorderLayout.CENTER);
 
             //RIGHT CLICK MENU//
+            popupMenu = new JPopupMenu();
             JMenuItem cut = new JMenuItem("Cut");
             cut.addActionListener(event2 -> textArea.cut());
             popupMenu.add(cut);
@@ -236,7 +237,10 @@ public class GUI extends JFrame
                     saveOutputToFile(numsOfChars);
                 textArea.setText("");
             });
-            exitButton.addActionListener(event2 -> inputCountingPanel.dispose());
+            exitButton.addActionListener(event2 -> {
+                popupMenu.setEnabled(false);
+                inputCountingPanel.dispose();
+            });
             menuBarCounting.add(count);
             menuBarCounting.add(exitButton);
             inputCountingPanel.add(menuBarCounting, BorderLayout.NORTH);
