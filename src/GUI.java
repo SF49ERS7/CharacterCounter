@@ -129,16 +129,6 @@ public class GUI extends JFrame
             if (result == JOptionPane.OK_OPTION)
             {
                 String input = JOptionPane.showInputDialog(this, "Enter your advanced options here", "Input", JOptionPane.QUESTION_MESSAGE);
-                if (input.equals("legacygui"))
-                {
-                    int result2 = JOptionPane.showConfirmDialog(this, "Are you sure you want to revert to the legacy GUI?\nIt is no longer supported, and it might be broken", "Confirm", JOptionPane.YES_NO_OPTION);
-                    if (result2 == JOptionPane.OK_OPTION)
-                    {
-                        super.setVisible(false);
-                        Config.setRunUI("GUI_Legacy");
-                        GUI_Legacy.main();
-                    }
-                }
                 String[] splitInput = input.split(" ");
                 Config.applySettings(splitInput);
             }

@@ -44,14 +44,6 @@ public class Config
      * Stores whether to send the output to a file.
      */
     private static boolean sendOutputToFile;
-     /**
-     * Stores whether to show a settings button in the GUI.
-     */
-    private static boolean showSettingsButton = true;
-    /**
-     * Stores whether the legacy (pre-0.11.0) GUI should be shown.
-     */
-    private static boolean showLegacyGUI = false;
     /**
      * Stores whether to count from a file on the web instead of on disk.
      */
@@ -81,9 +73,7 @@ public class Config
                 case "--url", "--link" -> countFromURL = true;
                 case "--allvals" -> showEmptyVals = true; //Whether to show empty values in the output
                 case "--gui", "--ui" -> forceGUI = true; //Whether to force a GUI
-                case "--oldgui", "--legacygui" -> showLegacyGUI = true;
-                case "--noconfig", "--nocfg" -> showSettingsButton = false;
-                }
+        }
         if (GraphicsEnvironment.isHeadless() && !forceGUI)
             runUI = "CLI"; //Even if the command line doesn't specify, we don't want to throw an exception
         if (forceGUI)
@@ -192,14 +182,6 @@ public class Config
         return showNumsIndependently;
     }
     /**
-     * Getter for <code>showSettingsButton</code>.
-     * @return <code>showSettingsButton</code>.
-     */
-    public static boolean isShowSettingsButton()
-    {
-        return showSettingsButton;
-    }
-    /**
      * Setter for <code>showTotal</code>.
      */
     public static void setShowTotal(boolean showTotal)
@@ -220,14 +202,6 @@ public class Config
     {
         Config.showEmptyVals = showEmptyVals;
     }
-    /**
-     * Getter for <code>showLegacyGUI</code>.
-     * @return <code>showLegacyGUI</code>.
-     */
-    public static boolean isShowLegacyGUI()
-    {
-        return showLegacyGUI;
-    }
 
     /**
      * Getter for <code>countFromURL</code>.
@@ -236,12 +210,5 @@ public class Config
     public static boolean isCountFromURL()
     {
         return countFromURL;
-    }
-    /**
-     * Setter for <code>countFromURL</code>.
-     */
-    public static void setCountFromURL(boolean countFromURL)
-    {
-        Config.countFromURL = countFromURL;
     }
 }
