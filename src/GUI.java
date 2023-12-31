@@ -38,7 +38,7 @@ public class GUI extends JFrame
 
         //FILE MENU//
         JMenu file1 = new JMenu("File");
-        JMenuItem countFromFileMenu = new JMenuItem("Count from file...");
+        JMenuItem countFromFileMenu = new JMenuItem("Count from File...");
         countFromFileMenu.addActionListener(event1 -> countFromFile());
         JMenuItem countFromURLMenu = new JMenuItem("Count from URL...");
         countFromURLMenu.addActionListener(event1 -> countFromURL());
@@ -223,7 +223,7 @@ public class GUI extends JFrame
      */
     private static boolean testForNoData(String input)
     {
-        if (input.length() == 0)
+        if (input.isEmpty())
         {
             invalidInputError();
             return true;
@@ -307,7 +307,7 @@ public class GUI extends JFrame
         count.addActionListener(event2 -> {
             String parsedData = Backend.parseData(textArea.getText());
 
-            if (parsedData.equals(""))
+            if (parsedData.isEmpty())
             {
                 noInputError();
                 return;
@@ -339,7 +339,7 @@ public class GUI extends JFrame
         String linkToCountFrom = JOptionPane.showInputDialog(this, "Enter the URL of the document to count", "Input", JOptionPane.QUESTION_MESSAGE);
         if (linkToCountFrom == null)
             return;
-        else if (linkToCountFrom.equals(""))
+        else if (linkToCountFrom.isEmpty())
         {
             noInputError();
             return;
